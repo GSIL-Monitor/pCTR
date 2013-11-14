@@ -2,6 +2,7 @@ package application.adCTR.data;
 
 import commons.framework.data.DataInstance;
 import commons.framework.data.ISourceHandler;
+import utils.StringUtils;
 
 /**
  * Created with IntelliJ IDEA.
@@ -10,12 +11,12 @@ import commons.framework.data.ISourceHandler;
  * Time: 下午3:33
  */
 public class CTRSourceHandler implements ISourceHandler{
-    private final int numOfFields = 28;
+    private final int numOfFields = 31;
     @Override
     public boolean handleSource(String sourceContent, DataInstance dataInstance) {
         try{
-            String[] contents = sourceContent.split("\t");
-            if(contents.length != 28)
+            String[] contents = StringUtils.splitStr(sourceContent,'\t');
+            if(contents.length != numOfFields)
             {
                 return false;
             }

@@ -11,6 +11,6 @@ import java.util.ArrayList;
  * Time: 上午11:29
  */
 public interface IFeatureHandler {
-    public abstract void initFeatureHandler();
+    public abstract int initFeatureHandler(int initFeatureId);
     public abstract ArrayList<Feature> ExtractFeature(DataInstance dataInstance);
 }

@@ -5,7 +5,8 @@ import application.adCTR.data.CTRDataInstanceMaker;
 import application.adCTR.data.CTRDataSource;
 import application.adCTR.data.CTRSourceHandler;
 import application.adCTR.sample.CTRSampleMaker;
-import application.adCTR.sample.DeviceTypeHandler;
+import application.adCTR.sample.handlers.DeviceTypeHandler;
+import application.adCTR.sample.handlers.OsTypeHandler;
 import commons.framework.sample.Sample;
 import commons.framework.sample.SampleType;
 
@@ -36,9 +37,17 @@ public class CTRSampleControl {
 
     private void initSampleHandlers()
     {
+        int initFeatureId = 0;//because all localId starts from 1, so we set init all featureId as 1 here
+        /**
+         * start to add all kinds of feature handlers
+         */
+        //device handler
         DeviceTypeHandler deviceTypeHandler = new DeviceTypeHandler();
-
-        sampleMaker.registerFeatureHandler(deviceTypeHandler);
+        initFeatureId = sampleMaker.registerFeatureHandler(deviceTypeHandler, initFeatureId);
+        //os handler
+        OsTypeHandler osTypeHandler = new OsTypeHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(osTypeHandler, initFeatureId);
+        //more feature handlers here
     }
 
     private void setupDataSource(String infile)

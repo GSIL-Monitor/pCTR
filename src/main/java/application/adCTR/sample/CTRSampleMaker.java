@@ -25,10 +25,11 @@ public class CTRSampleMaker extends SampleMaker {
     }
 
     //business part
-    public void registerFeatureHandler(IFeatureHandler handler)
+    public int registerFeatureHandler(IFeatureHandler handler, int initFeatureId)
     {
-        handler.initFeatureHandler();
+        int featureId = handler.initFeatureHandler(initFeatureId);
         super.registerFeatureHandler(handler);
+        return featureId;
     }
 
     public void fillSample(Sample sample, CTRDataInstance ctrDataInstance)
