@@ -51,7 +51,7 @@ public class Sample {
     public String toLibLinearTypeString()
     {
         StringBuilder sbd = new StringBuilder();
-        sbd.append(targetValue);
+        sbd.append((int)targetValue);
         for(int i = 0, len = featureArrayList.size(); i < len; i++)
         {
             Feature f = featureArrayList.get(i);

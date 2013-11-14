@@ -35,11 +35,10 @@ public class CTRSampleControl {
     private void initSourceHandlers()
     {
         CTRSourceHandler ctrSourceHandler = new CTRSourceHandler();
-
         dataInstanceMaker.registerSourceHandler(ctrSourceHandler);
     }
 
-    private void initSampleHandlers()
+    private int initSampleHandlers()
     {
         int initFeatureId = 0;//because all localId starts from 1, so we set init all featureId as 1 here
         /**
@@ -48,10 +47,13 @@ public class CTRSampleControl {
         //device handler
         DeviceTypeHandler deviceTypeHandler = new DeviceTypeHandler();
         initFeatureId = sampleMaker.registerFeatureHandler(deviceTypeHandler, initFeatureId);
+        System.out.println("device type handler register succeed");
         //os handler
         OsTypeHandler osTypeHandler = new OsTypeHandler();
         initFeatureId = sampleMaker.registerFeatureHandler(osTypeHandler, initFeatureId);
+        System.out.println("os type handler register succeed");
         //more feature handlers here
+        return initFeatureId;
     }
 
     private void setupDataSource(String infile)
@@ -69,6 +71,7 @@ public class CTRSampleControl {
             sampleMaker.fillSample(sample,dataInstance);
             return sample;
         }
+        System.out.println("instance " + id + " not correctly set");
         return null;
     }
 
@@ -80,9 +83,13 @@ public class CTRSampleControl {
         {
             Sample sample = makeSample(line, id, sampleType);
             id++;
-
+            if(sample == null)
+            {
+                System.out.println("sample " + id + " not succeed");
+                continue;
+            }
             try {
-                bufferedWriter.write(sample.toLibLinearTypeString());
+                bufferedWriter.write(sample.toLibLinearTypeString() + "\n");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -95,7 +102,8 @@ public class CTRSampleControl {
         //prepare for input
         this.setupDataSource(infile);
         this.initSourceHandlers();
-        this.initSampleHandlers();
+        int numOfFeatures = this.initSampleHandlers();
+        System.out.println("There are total " + numOfFeatures + " features");
         //prepare for output
         BufferedWriter bufferedWriter = getWriterFromFile(outfile);
         if(bufferedWriter == null)
@@ -161,6 +169,6 @@ public class CTRSampleControl {
         long numberOfSamples = control.run(infile, sampleType, outFile);
         long end = System.currentTimeMillis();
 
-        System.out.printf("There are total %l samples, takes %l seconds\n", numberOfSamples, (end-start)/1000);
+        System.out.println("There are total " + numberOfSamples + " samples, takes " + (end-start)/1000 + " seconds");
     }
 }

@@ -9,6 +9,7 @@ import utils.NumericalUtils;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,21 +22,20 @@ import java.util.HashMap;
  */
 public class DeviceTypeHandler implements IFeatureHandler{
     private final String deviceFeatureConf = "featureHandlerConf/deviceType.conf";
-    private int initFeatureId = 1;
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<Integer,Feature> deviceTypeFeatureHashMap = null;
 
     @Override
     public int initFeatureHandler(int initFeatureId) {
-        this.initFeatureId = initFeatureId;
         deviceTypeFeatureHashMap = new HashMap<Integer, Feature>();
         try{
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(deviceFeatureConf)));
+            InputStream is = FileUtils.getStreamFromFile(deviceFeatureConf);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             String line = null;
             while((line = bufferedReader.readLine()) != null)
             {
-                String[] contents = StringUtils.splitStr(line,'\t');
+                String[] contents = line.split("\t");
                 int deviceType = NumericalUtils.toInteger(contents[0]);
                 if(!deviceTypeFeatureHashMap.containsKey(deviceType))
                 {
@@ -44,13 +44,17 @@ public class DeviceTypeHandler implements IFeatureHandler{
                     deviceTypeFeatureHashMap.put(deviceType, feature);
                 }
             }
+            bufferedReader.close();
+            is.close();
         }catch (Exception e)
         {
+            e.printStackTrace();
             System.out.println("init device type feature fail");
         }finally
         {
-            maxFeatureId = initFeatureId + deviceTypeFeatureHashMap.size();
+            //deal with unseen feature
             unseenFeature = new Feature(maxFeatureId,"deviceType","1");
+            maxFeatureId = initFeatureId + deviceTypeFeatureHashMap.size() + 1;
         }
         return maxFeatureId;
     }

@@ -4,6 +4,8 @@ import commons.framework.data.DataInstance;
 import commons.framework.data.DataInstanceMaker;
 import commons.framework.data.ISourceHandler;
 
+import java.util.ArrayList;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
@@ -12,7 +14,9 @@ import commons.framework.data.ISourceHandler;
  */
 public class CTRDataInstanceMaker extends DataInstanceMaker {
     private static CTRDataInstanceMaker instance = null;
-    private CTRDataInstanceMaker(){}
+    private CTRDataInstanceMaker(){
+        this.sourceHandlerArrayList = new ArrayList<ISourceHandler>();
+    }
 
     public static CTRDataInstanceMaker getInstance()
     {

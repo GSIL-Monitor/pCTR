@@ -9,6 +9,7 @@ import utils.NumericalUtils;
 import utils.StringUtils;
 
 import java.io.BufferedReader;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -21,20 +22,19 @@ import java.util.HashMap;
  */
 public class OsTypeHandler implements IFeatureHandler{
     private final String osFeatureConf = "featureHandlerConf/osType.conf";
-    private int initFeatureId = 1;
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<Integer,Feature> osTypeFeatureHashMap = null;
     @Override
     public int initFeatureHandler(int initFeatureId) {
-        this.initFeatureId = initFeatureId;
         osTypeFeatureHashMap = new HashMap<Integer, Feature>();
         try{
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(osFeatureConf)));
+            InputStream is = FileUtils.getStreamFromFile(osFeatureConf);
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             String line = null;
             while((line = bufferedReader.readLine()) != null)
             {
-                String[] contents = StringUtils.splitStr(line,'\t');
+                String[] contents = line.split("\t");
                 int osType = NumericalUtils.toInteger(contents[0]);
                 if(!osTypeFeatureHashMap.containsKey(osType))
                 {
@@ -43,13 +43,18 @@ public class OsTypeHandler implements IFeatureHandler{
                     osTypeFeatureHashMap.put(osType, feature);
                 }
             }
+
+            bufferedReader.close();
+            is.close();
         }catch (Exception e)
         {
+            e.printStackTrace();
             System.out.println("init os type feature fail");
         }finally
         {
-            maxFeatureId = initFeatureId + osTypeFeatureHashMap.size();
+            //deal with unseen feature
             unseenFeature = new Feature(maxFeatureId,"osType","1");
+            maxFeatureId = initFeatureId + osTypeFeatureHashMap.size() + 1;
         }
         return maxFeatureId;
     }

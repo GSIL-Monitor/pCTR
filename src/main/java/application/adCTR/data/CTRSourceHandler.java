@@ -12,13 +12,14 @@ import utils.StringUtils;
  * Time: 下午3:33
  */
 public class CTRSourceHandler implements ISourceHandler{
-    private final int numOfFields = 31;
+    private final int numOfFields = 28;
     @Override
     public boolean handleSource(String sourceContent, DataInstance dataInstance) {
         try{
-            String[] contents = StringUtils.splitStr(sourceContent,'\t');
+            String[] contents = sourceContent.split("\t");
             if(contents.length != numOfFields)
             {
+                System.out.println("numOfFields not correct");
                 return false;
             }
             CTRDataInstance localInstance = (CTRDataInstance)dataInstance;
@@ -27,6 +28,7 @@ public class CTRSourceHandler implements ISourceHandler{
             {
                 return true;
             }
+            System.out.println("target value not correct");
             return false;
         }catch (Exception e)
         {
@@ -64,8 +66,8 @@ public class CTRSourceHandler implements ISourceHandler{
         dataInstance.setDeviceType(NumericalUtils.toInteger(fields[24]));
         dataInstance.setOsType(NumericalUtils.toInteger(fields[25]));
         dataInstance.setClientType(fields[26]);
-        dataInstance.setSdkId(fields[27]);
+        //dataInstance.setSdkId(fields[27]);
         //ignore reserved fields
-        dataInstance.setTargetValue(NumericalUtils.toDouble(fields[30]));
+        dataInstance.setTargetValue(NumericalUtils.toDouble(fields[27]));
     }
 }
