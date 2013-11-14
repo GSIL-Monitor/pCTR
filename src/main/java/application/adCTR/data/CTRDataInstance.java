@@ -18,13 +18,13 @@ public class CTRDataInstance extends DataInstance {
     private long timeStamp = -1;
     private String ip = null;
     private int castId = -1;
-    private int showId = -1;
+    private int creativeId = -1;
     private String category = null;
     private String subCategory = null;
     private String videoId = null;
     private String userId = null;
     private String cookie = null;
-    private int adlength = -1;
+    private int adLength = -1;
     private boolean isLong = false;
     private String programId = null;
     private String totalDown = null;
@@ -38,9 +38,10 @@ public class CTRDataInstance extends DataInstance {
     private String appVersion = null;
     private String displayQuality = null;
     private int deviceType = -1;
-    private int ostype = -1;
+    private int osType = -1;
     private String clientType = null;
     private String sdkId = null;
+    private double targetValue = Double.MIN_VALUE;
 
     public int getVersion() {
         return version;
@@ -74,12 +75,12 @@ public class CTRDataInstance extends DataInstance {
         this.castId = castId;
     }
 
-    public int getShowId() {
-        return showId;
+    public int getCreativeId(){
+        return creativeId;
     }
 
-    public void setShowId(int showId) {
-        this.showId = showId;
+    public void setCreativeId(int creativeId) {
+        this.creativeId = creativeId;
     }
 
     public String getCategory() {
@@ -122,12 +123,12 @@ public class CTRDataInstance extends DataInstance {
         this.cookie = cookie;
     }
 
-    public int getAdlength() {
-        return adlength;
+    public int getAdLength() {
+        return adLength;
     }
 
-    public void setAdlength(int adlength) {
-        this.adlength = adlength;
+    public void setAdLength(int adLength) {
+        this.adLength = adLength;
     }
 
     public boolean isLong() {
@@ -234,12 +235,12 @@ public class CTRDataInstance extends DataInstance {
         this.deviceType = deviceType;
     }
 
-    public int getOstype() {
-        return ostype;
+    public int getOsType() {
+        return osType;
     }
 
-    public void setOstype(int ostype) {
-        this.ostype = ostype;
+    public void setOsType(int osType) {
+        this.osType = osType;
     }
 
     public String getClientType() {
@@ -256,5 +257,15 @@ public class CTRDataInstance extends DataInstance {
 
     public void setSdkId(String sdkId) {
         this.sdkId = sdkId;
+    }
+
+    public double getTargetValue()
+    {
+        return targetValue;
+    }
+
+    public void setTargetValue(double targetValue)
+    {
+        this.targetValue = targetValue;
     }
 }

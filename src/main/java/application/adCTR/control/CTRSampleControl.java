@@ -10,6 +10,10 @@ import application.adCTR.sample.handlers.OsTypeHandler;
 import commons.framework.sample.Sample;
 import commons.framework.sample.SampleType;
 
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
+
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
@@ -55,34 +59,108 @@ public class CTRSampleControl {
         dataSource.setupSource(infile);
     }
 
-    private Sample makeSample(String sourceContent, long id)
+    private Sample makeSample(String sourceContent, long id, SampleType sampleType)
     {
         CTRDataInstance dataInstance = new CTRDataInstance(id);
         dataInstanceMaker.fillDataInstance(sourceContent,dataInstance);
         if(dataInstance.isCorrectlyFilled())
         {
-            Sample sample = new Sample(SampleType.TRAIN,id);
+            Sample sample = new Sample(sampleType, id, dataInstance.getTargetValue());
             sampleMaker.fillSample(sample,dataInstance);
+            return sample;
         }
         return null;
     }
 
-    public void generateSamplesFromFile(String infile)
+    private long generateSamplesFromSource(BufferedWriter bufferedWriter, SampleType sampleType)
     {
-        //preparation
-        this.setupDataSource(infile);
-        this.initSourceHandlers();
-        this.initSampleHandlers();
-        //start
-        String line = null;
+        String line;
         long id = 1;
         while((line = dataSource.readLine()) != null)
         {
-            Sample sample = makeSample(line, id);
+            Sample sample = makeSample(line, id, sampleType);
             id++;
 
-            //TODO find a way to output the samples
+            try {
+                bufferedWriter.write(sample.toLibLinearTypeString());
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        return id;
+    }
+
+    private long generateSamplesFromFile(String infile, String outfile, SampleType sampleType)
+    {
+        //prepare for input
+        this.setupDataSource(infile);
+        this.initSourceHandlers();
+        this.initSampleHandlers();
+        //prepare for output
+        BufferedWriter bufferedWriter = getWriterFromFile(outfile);
+        if(bufferedWriter == null)
+        {
+            System.out.println("creating BufferedWriter from " + outfile + " fail");
+            System.exit(-1);
+        }
+        //start
+        long numOfSamples = this.generateSamplesFromSource(bufferedWriter,sampleType);
+        //clean up
+        dataSource.close();
+        try{
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+        return numOfSamples;
+    }
+
+    private BufferedWriter getWriterFromFile(String fileName)
+    {
+        try{
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(fileName));
+            return bufferedWriter;
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public long run(String infile, String inputType, String outFile)
+    {
+        if(!SampleType.isSampleType(inputType))
+        {
+            System.out.println("unrecognized sample type as " + inputType);
+            System.exit(-1);
         }
 
+        SampleType sampleType = SampleType.valueOf(inputType);
+        long numOfSamples = this.generateSamplesFromFile(infile,outFile,sampleType);
+        return numOfSamples;
+    }
+
+    public static void main(String[] args)
+    {
+        int numberOfParameters = 3;
+        if(args.length < numberOfParameters)
+        {
+            System.out.println("need more parameters");
+            System.out.println("usage: run program with parameters $inputFile $sampleType $outputFile");
+            System.exit(-1);
+        }
+
+        String infile = args[0];
+        String sampleType = args[1];
+        String outFile = args[2];
+
+        long start = System.currentTimeMillis();
+        CTRSampleControl control = new CTRSampleControl();
+        long numberOfSamples = control.run(infile, sampleType, outFile);
+        long end = System.currentTimeMillis();
+
+        System.out.printf("There are total %l samples, takes %l seconds\n", numberOfSamples, (end-start)/1000);
     }
 }

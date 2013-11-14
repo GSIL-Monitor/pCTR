@@ -59,7 +59,7 @@ public class OsTypeHandler implements IFeatureHandler{
         ArrayList<Feature> featureArrayList = new ArrayList<Feature>();
         if(dataInstance instanceof CTRDataInstance)
         {
-            int osType = ((CTRDataInstance) dataInstance).getOstype();
+            int osType = ((CTRDataInstance) dataInstance).getOsType();
             if(osTypeFeatureHashMap.containsKey(osType))
             {
                 featureArrayList.add(osTypeFeatureHashMap.get(osType));

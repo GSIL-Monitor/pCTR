@@ -17,7 +17,7 @@ public class NumericalUtils {
         return df.format(number);
     }
     /**
-     * turn a string into integer, return Integer.MIN_VALUE if exception happened
+     * turn a string into integer, return Integer.MIN_VALUE if exception happens
      * @param str
      * @return
      */
@@ -36,5 +36,48 @@ public class NumericalUtils {
         }
     }
 
+    /**
+     * turn a string into long, return Long.MIN_VALUE if exception happens
+     * @param str
+     * @return
+     */
+    public static long toLong(String str)
+    {
+        if(StringUtils.isStringNullOrEmpty(str))
+        {
+            return Long.MIN_VALUE;
+        }
+        try{
+            long value = Long.parseLong(str);
+            return value;
+        }catch (Exception e)
+        {
+            return Long.MIN_VALUE;
+        }
+    }
 
+    /**
+     * turn a string into double, return Double.MIN_VALUE if exception happens
+     * @param str
+     * @return
+     */
+    public static Double toDouble(String str)
+    {
+        if(StringUtils.isStringNullOrEmpty(str))
+        {
+            return Double.MIN_VALUE;
+        }
+        try{
+            double value = Double.parseDouble(str);
+            return value;
+        }catch (Exception e)
+        {
+            return Double.MIN_VALUE;
+        }
+    }
+
+    public static boolean isTrue(String str)
+    {
+        return "1".equals(str) ? true : false;
+    }
 }

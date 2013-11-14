@@ -15,22 +15,17 @@ public class Sample {
     private double targetValue;
     private double predictValue;
 
-    public Sample(SampleType sampleType, long sampleID)
+    public Sample(SampleType sampleType, long sampleID, double targetValue)
     {
         this.sampleID = sampleID;
         this.sampleType = sampleType;
-
+        this.targetValue = targetValue;
         this.featureArrayList = new ArrayList<Feature>(1024);
     }
 
     public void addFeatures(ArrayList<Feature> newFeatures)
     {
         this.featureArrayList.addAll(newFeatures);
-    }
-
-    public void setTargetValue(double targetValue)
-    {
-        this.targetValue = targetValue;
     }
 
     public void setPredictValue(double predictValue) {

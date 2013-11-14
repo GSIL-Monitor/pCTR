@@ -10,4 +10,17 @@ public enum SampleType {
     TRAIN,
     VALIDATE,
     TEST;
+
+    public static boolean isSampleType(String inputType)
+    {
+        SampleType[] types = SampleType.values();
+        for(int i = 0; i < types.length; i++)
+        {
+            if(types[i].name().equals(inputType))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
 }
