@@ -12,7 +12,7 @@ import utils.StringUtils;
  * Time: 下午3:33
  */
 public class CTRSourceHandler implements ISourceHandler{
-    private final int numOfFields = 33;
+    private final int numOfFields = 34;
     @Override
     public boolean handleSource(String sourceContent, DataInstance dataInstance) {
         try{
@@ -69,7 +69,8 @@ public class CTRSourceHandler implements ISourceHandler{
         dataInstance.setClientType(fields[27]);
         dataInstance.setSdkId(fields[28]);
         //ignore reserved fields
-        dataInstance.setFullScreen(NumericalUtils.isTrue(fields[31]));
-        dataInstance.setKeywords(fields[32]);
+        dataInstance.setCityId(NumericalUtils.toInteger(fields[31]));
+        dataInstance.setFullScreen(NumericalUtils.isTrue(fields[32]));
+        dataInstance.setKeywords(fields[33]);
     }
 }

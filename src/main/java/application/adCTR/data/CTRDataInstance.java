@@ -41,7 +41,19 @@ public class CTRDataInstance extends DataInstance {
     private int osType = -1;
     private String clientType = null;
     private String sdkId = null;
+    private int cityId = -1;
     private boolean isFullScreen = false;
+    private String keywords = null;
+
+    public int getCityId()
+    {
+        return cityId;
+    }
+
+    public void setCityId(int cityId)
+    {
+        this.cityId = cityId;
+    }
 
     public String getKeywords() {
         return keywords;
@@ -59,7 +71,7 @@ public class CTRDataInstance extends DataInstance {
         isFullScreen = fullScreen;
     }
 
-    private String keywords = null;
+
 
     public int getVersion() {
         return version;
