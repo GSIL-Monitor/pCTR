@@ -7,6 +7,17 @@ package utils;
  * Time: 上午10:45
  */
 public class StringUtils {
+
+    /**
+     * detect whether a string is "true"
+     * @param str
+     * @return
+     */
+    public static boolean isTrue(String str)
+    {
+        return "true".equals(str);
+    }
+
     public static boolean isStringNullOrEmpty(String str)
     {
         return str == null || str.length() < 1;

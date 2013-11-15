@@ -5,8 +5,10 @@ import application.adCTR.data.CTRDataInstanceMaker;
 import application.adCTR.data.CTRDataSource;
 import application.adCTR.data.CTRSourceHandler;
 import application.adCTR.sample.CTRSampleMaker;
+import application.adCTR.sample.handlers.CategoryHandler;
 import application.adCTR.sample.handlers.DeviceTypeHandler;
 import application.adCTR.sample.handlers.OsTypeHandler;
+import application.adCTR.sample.handlers.ProductTypeHandler;
 import commons.framework.sample.Sample;
 import commons.framework.sample.SampleType;
 
@@ -52,6 +54,14 @@ public class CTRSampleControl {
         OsTypeHandler osTypeHandler = new OsTypeHandler();
         initFeatureId = sampleMaker.registerFeatureHandler(osTypeHandler, initFeatureId);
         System.out.println("os type handler register succeed");
+        //product type handler
+        ProductTypeHandler productTypeHandler = new ProductTypeHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(productTypeHandler, initFeatureId);
+        System.out.println("product type handler register succeed");
+        //category
+        CategoryHandler categoryHandler = new CategoryHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(categoryHandler, initFeatureId);
+        System.out.println("category handler register succeed");
         //more feature handlers here
         return initFeatureId;
     }

@@ -25,6 +25,7 @@ public class OsTypeHandler implements IFeatureHandler{
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<Integer,Feature> osTypeFeatureHashMap = null;
+    private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
         osTypeFeatureHashMap = new HashMap<Integer, Feature>();
@@ -35,6 +36,10 @@ public class OsTypeHandler implements IFeatureHandler{
             while((line = bufferedReader.readLine()) != null)
             {
                 String[] contents = line.split("\t");
+                if(contents.length != numOfFields)
+                {
+                    continue;
+                }
                 int osType = NumericalUtils.toInteger(contents[0]);
                 if(!osTypeFeatureHashMap.containsKey(osType))
                 {

@@ -6,7 +6,6 @@ import commons.framework.sample.Feature;
 import commons.framework.sample.IFeatureHandler;
 import utils.FileUtils;
 import utils.NumericalUtils;
-import utils.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -17,20 +16,21 @@ import java.util.HashMap;
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
- * Date: 13-11-13
- * Time: 下午4:56
+ * Date: 13-11-15
+ * Time: 下午4:39
  */
-public class DeviceTypeHandler implements IFeatureHandler{
-    private final String deviceFeatureConf = "featureHandlerConf/deviceType.conf";
+public class CategoryHandler  implements IFeatureHandler {
+
+    private final String categoryFeatureConf = "featureHandlerConf/category.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
-    private HashMap<Integer,Feature> deviceTypeFeatureHashMap = null;
+    private HashMap<String,Feature> categoryFeatureHashMap = null;
     private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
-        deviceTypeFeatureHashMap = new HashMap<Integer, Feature>();
+        categoryFeatureHashMap = new HashMap<String, Feature>();
         try{
-            InputStream is = FileUtils.getStreamFromFile(deviceFeatureConf);
+            InputStream is = FileUtils.getStreamFromFile(categoryFeatureConf);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             String line = null;
             while((line = bufferedReader.readLine()) != null)
@@ -40,12 +40,12 @@ public class DeviceTypeHandler implements IFeatureHandler{
                 {
                     continue;
                 }
-                int deviceType = NumericalUtils.toInteger(contents[0]);
-                if(!deviceTypeFeatureHashMap.containsKey(deviceType))
+                String category = contents[0];
+                if(!categoryFeatureHashMap.containsKey(category))
                 {
                     int localId = Integer.parseInt(contents[1]);
-                    Feature feature = new Feature(localId+initFeatureId,"deviceType","1");
-                    deviceTypeFeatureHashMap.put(deviceType, feature);
+                    Feature feature = new Feature(localId+initFeatureId,"category","1");
+                    categoryFeatureHashMap.put(category, feature);
                 }
             }
             bufferedReader.close();
@@ -53,12 +53,12 @@ public class DeviceTypeHandler implements IFeatureHandler{
         }catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("init device type feature fail");
+            System.out.println("init category feature fail");
         }finally
         {
             //deal with unseen feature
-            unseenFeature = new Feature(maxFeatureId,"deviceType","1");
-            maxFeatureId = initFeatureId + deviceTypeFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"category","1");
+            maxFeatureId = initFeatureId + categoryFeatureHashMap.size() + 1;
         }
         return maxFeatureId;
     }
@@ -68,10 +68,10 @@ public class DeviceTypeHandler implements IFeatureHandler{
         ArrayList<Feature> featureArrayList = new ArrayList<Feature>();
         if(dataInstance instanceof CTRDataInstance)
         {
-            int deviceType = ((CTRDataInstance) dataInstance).getDeviceType();
-            if(deviceTypeFeatureHashMap.containsKey(deviceType))
+            String category = ((CTRDataInstance) dataInstance).getCategory();
+            if(categoryFeatureHashMap.containsKey(category))
             {
-                featureArrayList.add(deviceTypeFeatureHashMap.get(deviceType));
+                featureArrayList.add(categoryFeatureHashMap.get(category));
             }
             else
             {

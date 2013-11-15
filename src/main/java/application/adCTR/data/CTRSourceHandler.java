@@ -19,7 +19,7 @@ public class CTRSourceHandler implements ISourceHandler{
             String[] contents = sourceContent.split("\t");
             if(contents.length != numOfFields)
             {
-                System.out.println("numOfFields not correct");
+                System.out.println("numOfFields not correct, now the fields number is " + contents.length);
                 return false;
             }
             CTRDataInstance localInstance = (CTRDataInstance)dataInstance;
@@ -70,7 +70,7 @@ public class CTRSourceHandler implements ISourceHandler{
         dataInstance.setSdkId(fields[28]);
         //ignore reserved fields
         dataInstance.setCityId(NumericalUtils.toInteger(fields[31]));
-        dataInstance.setFullScreen(NumericalUtils.isTrue(fields[32]));
+        dataInstance.setFullScreen(StringUtils.isTrue(fields[32]));
         dataInstance.setKeywords(fields[33]);
     }
 }

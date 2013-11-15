@@ -1,7 +1,5 @@
 package application.adCTR.evaluation.creative;
 
-import org.apache.hadoop.util.hash.Hash;
-
 import java.util.HashMap;
 
 /**
