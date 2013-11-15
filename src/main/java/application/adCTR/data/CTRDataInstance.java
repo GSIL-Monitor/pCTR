@@ -13,7 +13,7 @@ public class CTRDataInstance extends DataInstance {
     {
         this.dataInstanceId = dataInstanceId;
     }
-
+    private double targetValue = Double.MIN_VALUE;
     private int version = -1;
     private long timeStamp = -1;
     private String ip = null;
@@ -41,7 +41,25 @@ public class CTRDataInstance extends DataInstance {
     private int osType = -1;
     private String clientType = null;
     private String sdkId = null;
-    private double targetValue = Double.MIN_VALUE;
+    private boolean isFullScreen = false;
+
+    public String getKeywords() {
+        return keywords;
+    }
+
+    public void setKeywords(String keywords) {
+        this.keywords = keywords;
+    }
+
+    public boolean isFullScreen() {
+        return isFullScreen;
+    }
+
+    public void setFullScreen(boolean fullScreen) {
+        isFullScreen = fullScreen;
+    }
+
+    private String keywords = null;
 
     public int getVersion() {
         return version;

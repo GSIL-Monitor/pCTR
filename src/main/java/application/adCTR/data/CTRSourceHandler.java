@@ -39,35 +39,37 @@ public class CTRSourceHandler implements ISourceHandler{
 
     private void setupDataInstance(CTRDataInstance dataInstance, String[] fields)
     {
-        dataInstance.setVersion(NumericalUtils.toInteger(fields[0]));
-        dataInstance.setTimeStamp(NumericalUtils.toLong(fields[1]));
-        dataInstance.setIp(fields[2]);
-        dataInstance.setCastId(NumericalUtils.toInteger(fields[3]));
-        dataInstance.setCreativeId(NumericalUtils.toInteger(fields[4]));
-        dataInstance.setCategory(fields[5]);
-        dataInstance.setSubCategory(fields[6]);
-        dataInstance.setVideoId(fields[7]);
-        dataInstance.setUserId(fields[8]);
+        dataInstance.setTargetValue(NumericalUtils.toDouble(fields[0]));
+        dataInstance.setVersion(NumericalUtils.toInteger(fields[1]));
+        dataInstance.setTimeStamp(NumericalUtils.toLong(fields[2]));
+        dataInstance.setIp(fields[3]);
+        dataInstance.setCastId(NumericalUtils.toInteger(fields[4]));
+        dataInstance.setCreativeId(NumericalUtils.toInteger(fields[5]));
+        dataInstance.setCategory(fields[6]);
+        dataInstance.setSubCategory(fields[7]);
+        dataInstance.setVideoId(fields[8]);
+        dataInstance.setUserId(fields[9]);
         //Pl is dispatched
-        dataInstance.setCookie(fields[10]);
-        dataInstance.setAdLength(NumericalUtils.toInteger(fields[11]));
-        dataInstance.setLong(NumericalUtils.isTrue(fields[12]));
-        dataInstance.setProgramId(fields[13]);
-        dataInstance.setTotalDown(fields[14]);
-        dataInstance.setVideoLength(NumericalUtils.toDouble(fields[15]));
-        dataInstance.setAdPosition(NumericalUtils.toInteger(fields[16]));
-        dataInstance.setSessionId(fields[17]);
-        dataInstance.setCopyright(NumericalUtils.isTrue(fields[18]));
-        dataInstance.setOrderId(fields[19]);
-        dataInstance.setTvb(NumericalUtils.isTrue(fields[20]));
-        dataInstance.setProductType(NumericalUtils.toInteger(fields[21]));
-        dataInstance.setAppVersion(fields[22]);
-        dataInstance.setDisplayQuality(fields[23]);
-        dataInstance.setDeviceType(NumericalUtils.toInteger(fields[24]));
-        dataInstance.setOsType(NumericalUtils.toInteger(fields[25]));
-        dataInstance.setClientType(fields[26]);
-        //dataInstance.setSdkId(fields[27]);
+        dataInstance.setCookie(fields[11]);
+        dataInstance.setAdLength(NumericalUtils.toInteger(fields[12]));
+        dataInstance.setLong(NumericalUtils.isTrue(fields[13]));
+        dataInstance.setProgramId(fields[14]);
+        dataInstance.setTotalDown(fields[15]);
+        dataInstance.setVideoLength(NumericalUtils.toDouble(fields[16]));
+        dataInstance.setAdPosition(NumericalUtils.toInteger(fields[17]));
+        dataInstance.setSessionId(fields[18]);
+        dataInstance.setCopyright(NumericalUtils.isTrue(fields[19]));
+        dataInstance.setOrderId(fields[20]);
+        dataInstance.setTvb(NumericalUtils.isTrue(fields[21]));
+        dataInstance.setProductType(NumericalUtils.toInteger(fields[22]));
+        dataInstance.setAppVersion(fields[23]);
+        dataInstance.setDisplayQuality(fields[24]);
+        dataInstance.setDeviceType(NumericalUtils.toInteger(fields[25]));
+        dataInstance.setOsType(NumericalUtils.toInteger(fields[26]));
+        dataInstance.setClientType(fields[27]);
+        dataInstance.setSdkId(fields[28]);
         //ignore reserved fields
-        dataInstance.setTargetValue(NumericalUtils.toDouble(fields[27]));
+        dataInstance.setFullScreen(NumericalUtils.isTrue(fields[31]));
+        dataInstance.setKeywords(fields[32]);
     }
 }
