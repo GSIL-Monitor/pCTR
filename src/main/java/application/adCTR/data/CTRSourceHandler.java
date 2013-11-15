@@ -12,7 +12,7 @@ import utils.StringUtils;
  * Time: 下午3:33
  */
 public class CTRSourceHandler implements ISourceHandler{
-    private final int numOfFields = 28;
+    private final int numOfFields = 33;
     @Override
     public boolean handleSource(String sourceContent, DataInstance dataInstance) {
         try{
