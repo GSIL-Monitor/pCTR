@@ -57,8 +57,8 @@ public class CategoryHandler  implements IFeatureHandler {
         }finally
         {
             //deal with unseen feature
-            unseenFeature = new Feature(maxFeatureId,"category","1");
             maxFeatureId = initFeatureId + categoryFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"category","1");
         }
         return maxFeatureId;
     }

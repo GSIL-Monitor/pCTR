@@ -56,8 +56,8 @@ public class ProductTypeHandler implements IFeatureHandler {
         }finally
         {
             //deal with unseen feature
-            unseenFeature = new Feature(maxFeatureId,"productType","1");
             maxFeatureId = initFeatureId + productTypeFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"productType","1");
         }
         return maxFeatureId;
     }

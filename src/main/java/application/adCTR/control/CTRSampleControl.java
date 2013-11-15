@@ -91,6 +91,10 @@ public class CTRSampleControl {
         long id = 1;
         while((line = dataSource.readLine()) != null)
         {
+            if(id % 1000000 == 0)
+            {
+                System.out.println("Processing " + id + " Samples");
+            }
             Sample sample = makeSample(line, id, sampleType);
             id++;
             if(sample == null)

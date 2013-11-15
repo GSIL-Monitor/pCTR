@@ -57,8 +57,8 @@ public class DeviceTypeHandler implements IFeatureHandler{
         }finally
         {
             //deal with unseen feature
-            unseenFeature = new Feature(maxFeatureId,"deviceType","1");
             maxFeatureId = initFeatureId + deviceTypeFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"deviceType","1");
         }
         return maxFeatureId;
     }

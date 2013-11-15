@@ -58,8 +58,8 @@ public class OsTypeHandler implements IFeatureHandler{
         }finally
         {
             //deal with unseen feature
-            unseenFeature = new Feature(maxFeatureId,"osType","1");
             maxFeatureId = initFeatureId + osTypeFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"osType","1");
         }
         return maxFeatureId;
     }
