@@ -50,11 +50,11 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        <dependency>
-            <groupId>com.youku.data</groupId>
-            <artifactId>data-mr-common</artifactId>
-            <version>1.4.6</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.youku.data</groupId>-->
+            <!--<artifactId>data-mr-common</artifactId>-->
+            <!--<version>1.4.6</version>-->
+        <!--</dependency>-->
     </dependencies>
 
     <repositories>
