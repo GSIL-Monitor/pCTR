@@ -50,5 +50,51 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>com.youku.data</groupId>
+            <artifactId>data-mr-common</artifactId>
+            <version>1.4.6</version>
+        </dependency>
     </dependencies>
+
+    <repositories>
+        <repository>
+            <id>apache.snapshots.https</id>
+            <name>Apache Development Snapshot Repository</name>
+            <url>https://repository.apache.org/content/repositories/snapshots</url>
+        </repository>
+
+        <repository>
+            <id>repository.jboss.org</id>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <releases>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </releases>
+            <snapshots>
+                <enabled>true</enabled>
+                <updatePolicy>daily</updatePolicy>
+            </snapshots>
+            <id>repo.1verge.net</id>
+            <name>repo_1verge_net</name>
+            <url>http://repo.data.1verge.net/nexus/content/groups/public/</url>
+            <layout>default</layout>
+        </repository>
+
+        <repository>
+            <id>apache</id>
+            <url>http://repo.maven.apache.org/maven2</url>
+        </repository>
+
+        <repository>
+            <id>nuxeo.maven-us</id>
+            <url>https://maven-us.nuxeo.org/nexus/content/groups/public</url>
+        </repository>
+    </repositories>
 </project>
