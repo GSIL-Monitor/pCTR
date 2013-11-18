@@ -12,6 +12,7 @@ import commons.framework.sample.SampleType;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.concurrent.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -93,6 +94,48 @@ public class CTRSampleControl {
         return null;
     }
 
+    private long parallelGenerateSamplesFromSource(BufferedWriter bufferedWriter, SampleType sampleType)
+    {
+        ExecutorService executorService = Executors.newCachedThreadPool();
+        final SampleType innerType =  sampleType;
+        final BufferedWriter localWriter = bufferedWriter;
+        long id = 1;
+        String line;
+        while((line = dataSource.readLine()) != null)
+        {
+            final String innerLine = line;
+            id++;
+            final long index = id;
+            Runnable run = new Runnable() {
+                @Override
+                public void run() {
+                    if(index % 10000000 == 0)
+                    {
+                        System.out.println("Processing " + index + " Samples");
+                    }
+
+                    Sample sample = makeSample(innerLine, index, innerType);
+                    if(sample == null)
+                    {
+                        System.out.println("sample " + sample.getSampleID() + " not succeed");
+                    }
+                    else
+                    {
+                        try {
+                            localWriter.write(sample.toLibLinearTypeString() + "\n");
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                }
+            };
+            executorService.execute(run);
+        }
+        executorService.shutdown();
+        return id;
+    }
+
     private long generateSamplesFromSource(BufferedWriter bufferedWriter, SampleType sampleType)
     {
         String line;
@@ -134,7 +177,15 @@ public class CTRSampleControl {
             System.exit(-1);
         }
         //start
-        long numOfSamples = this.generateSamplesFromSource(bufferedWriter,sampleType);
+//        long numOfSamples = this.generateSamplesFromSource(bufferedWriter,sampleType);
+        //parallel implementation
+        long numOfSamples = this.parallelGenerateSamplesFromSource(bufferedWriter,sampleType);
+        try{
+            Thread.sleep(2000);
+        }catch (Exception e)
+        {
+            e.printStackTrace();
+        }
         //clean up
         dataSource.close();
         try{
