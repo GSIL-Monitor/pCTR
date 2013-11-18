@@ -5,10 +5,7 @@ import application.adCTR.data.CTRDataInstanceMaker;
 import application.adCTR.data.CTRDataSource;
 import application.adCTR.data.CTRSourceHandler;
 import application.adCTR.sample.CTRSampleMaker;
-import application.adCTR.sample.handlers.CategoryHandler;
-import application.adCTR.sample.handlers.DeviceTypeHandler;
-import application.adCTR.sample.handlers.OsTypeHandler;
-import application.adCTR.sample.handlers.ProductTypeHandler;
+import application.adCTR.sample.handlers.*;
 import commons.framework.sample.Sample;
 import commons.framework.sample.SampleType;
 
@@ -62,6 +59,17 @@ public class CTRSampleControl {
         CategoryHandler categoryHandler = new CategoryHandler();
         initFeatureId = sampleMaker.registerFeatureHandler(categoryHandler, initFeatureId);
         System.out.println("category handler register succeed");
+        //cast id
+        CastIDHandler castIDHandler = new CastIDHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(castIDHandler, initFeatureId);
+        System.out.println("cast id handler register succeed");
+        //creative id
+        CreativeIDHandler creativeIDHandler = new CreativeIDHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(creativeIDHandler, initFeatureId);
+        System.out.println("creative id handler register succeed");
+        CreativeChannelHandler creativeChannelHandler = new CreativeChannelHandler();
+        initFeatureId = sampleMaker.registerFeatureHandler(creativeChannelHandler, initFeatureId);
+        System.out.println("creative channel handler register succeed");
         //more feature handlers here
         return initFeatureId;
     }
