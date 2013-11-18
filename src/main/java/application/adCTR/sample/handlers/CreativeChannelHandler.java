@@ -20,7 +20,7 @@ import java.util.HashMap;
  * Time: 上午10:24
  */
 public class CreativeChannelHandler implements IFeatureHandler {
-    private final String creativeChannelFeatureConf = "featureHandlerConf/creativeChannelClickRate.conf";
+    private final String creativeChannelFeatureConf = "featureHandlerConf/creativeCategoryClickRate.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<String,Feature> creativeChannelClickRateMap = null;

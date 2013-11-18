@@ -12,12 +12,13 @@ import utils.StringUtils;
  * Time: 下午3:33
  */
 public class CTRSourceHandler implements ISourceHandler{
-    private final int numOfFields = 34;
+    private final int numOfFieldsWithKeywords = 34;
+    private final int numOfFieldsWithoutKeywords = 33;
     @Override
     public boolean handleSource(String sourceContent, DataInstance dataInstance) {
         try{
             String[] contents = sourceContent.split("\t");
-            if(contents.length != numOfFields)
+            if(contents.length != numOfFieldsWithKeywords && contents.length != numOfFieldsWithoutKeywords)
             {
                 System.out.println("numOfFields not correct, now the fields number is " + contents.length);
                 return false;
@@ -71,6 +72,13 @@ public class CTRSourceHandler implements ISourceHandler{
         //ignore reserved fields
         dataInstance.setCityId(NumericalUtils.toInteger(fields[31]));
         dataInstance.setFullScreen(StringUtils.isTrue(fields[32]));
-        dataInstance.setKeywords(fields[33]);
+        if(fields.length == numOfFieldsWithKeywords)
+        {
+            dataInstance.setKeywords(fields[33]);
+        }
+        else
+        {
+            dataInstance.setKeywords("null");
+        }
     }
 }
