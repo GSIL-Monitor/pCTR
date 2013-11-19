@@ -4,6 +4,7 @@ import application.adCTR.data.CTRDataInstance;
 import application.adCTR.data.CTRDataInstanceMaker;
 import application.adCTR.data.CTRDataSource;
 import application.adCTR.data.CTRSourceHandler;
+import application.adCTR.sample.CTRSampleConfig;
 import application.adCTR.sample.CTRSampleMaker;
 import application.adCTR.sample.handlers.*;
 import commons.framework.sample.Sample;
@@ -40,37 +41,71 @@ public class CTRSampleControl {
 
     private int initSampleHandlers()
     {
+        /**
+         * init config first
+         */
+        CTRSampleConfig config = CTRSampleConfig.getInstance();
+        config.loadConfig();
         int initFeatureId = 0;//because all localId starts from 1, so we set init all featureId as 1 here
         /**
          * start to add all kinds of feature handlers
          */
         //device handler
-        DeviceTypeHandler deviceTypeHandler = new DeviceTypeHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(deviceTypeHandler, initFeatureId);
-        System.out.println("device type handler register succeed");
+        if(config.isDeviceTypeHandlerSwitch())
+        {
+            DeviceTypeHandler deviceTypeHandler = new DeviceTypeHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(deviceTypeHandler, initFeatureId);
+            System.out.println("device type handler register succeed");
+        }
         //os handler
-        OsTypeHandler osTypeHandler = new OsTypeHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(osTypeHandler, initFeatureId);
-        System.out.println("os type handler register succeed");
+        if(config.isOsTypeHandlerSwitch())
+        {
+            OsTypeHandler osTypeHandler = new OsTypeHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(osTypeHandler, initFeatureId);
+            System.out.println("os type handler register succeed");
+        }
         //product type handler
-        ProductTypeHandler productTypeHandler = new ProductTypeHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(productTypeHandler, initFeatureId);
-        System.out.println("product type handler register succeed");
+        if(config.isProductTypeHandlerSwitch())
+        {
+            ProductTypeHandler productTypeHandler = new ProductTypeHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(productTypeHandler, initFeatureId);
+            System.out.println("product type handler register succeed");
+        }
         //category
-        CategoryHandler categoryHandler = new CategoryHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(categoryHandler, initFeatureId);
-        System.out.println("category handler register succeed");
+        if(config.isCategoryHandlerSwitch())
+        {
+            CategoryHandler categoryHandler = new CategoryHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(categoryHandler, initFeatureId);
+            System.out.println("category handler register succeed");
+        }
         //cast id
-        CastIDHandler castIDHandler = new CastIDHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(castIDHandler, initFeatureId);
-        System.out.println("cast id handler register succeed");
+        if(config.isCastIDHandlerSwitch())
+        {
+            CastIDHandler castIDHandler = new CastIDHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(castIDHandler, initFeatureId);
+            System.out.println("cast id handler register succeed");
+        }
         //creative id
-        CreativeIDHandler creativeIDHandler = new CreativeIDHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(creativeIDHandler, initFeatureId);
-        System.out.println("creative id handler register succeed");
-        CreativeChannelHandler creativeChannelHandler = new CreativeChannelHandler();
-        initFeatureId = sampleMaker.registerFeatureHandler(creativeChannelHandler, initFeatureId);
-        System.out.println("creative channel handler register succeed");
+        if(config.isCreativeIDHandlerSwitch())
+        {
+            CreativeIDHandler creativeIDHandler = new CreativeIDHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(creativeIDHandler, initFeatureId);
+            System.out.println("creative id handler register succeed");
+        }
+        //creative channel
+        if(config.isCreativeChannelHandlerSwitch())
+        {
+            CreativeChannelHandler creativeChannelHandler = new CreativeChannelHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(creativeChannelHandler, initFeatureId);
+            System.out.println("creative channel handler register succeed");
+        }
+        //
+        if(config.isClientTypeHandlerSwitch())
+        {
+            ClientTypeHandler clientTypeHandler = new ClientTypeHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(clientTypeHandler, initFeatureId);
+            System.out.println("client type handler register succeed");
+        }
         //more feature handlers here
         return initFeatureId;
     }
