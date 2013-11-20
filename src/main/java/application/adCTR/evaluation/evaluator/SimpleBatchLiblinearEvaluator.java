@@ -10,29 +10,24 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
- * Date: 13-11-19
- * Time: 下午4:09
+ * Date: 13-11-20
+ * Time: 下午1:01
  */
-public class SimpleLiblinearEvaluator {
-
+public class SimpleBatchLiblinearEvaluator {
     private ArrayList<Double> weightList;
     private int weightSize = 0;
-    private double threshold = 0.5;
+    private final int numOfBatch = 20;
+    private final double base = 0.4;
+    private final double stepSize = 0.01;
 
-    private long pos_pos; //positive sample with positive prediction
-    private long pos_neg; //positive sample with negative prediction
-    private long neg_pos; //negative sample with positive prediction
-    private long neg_neg; //negative sample with negative prediction
+    private long[] pos_pos; //positive sample with positive prediction
+    private long[] pos_neg; //positive sample with negative prediction
+    private long[] neg_pos; //negative sample with positive prediction
+    private long[] neg_neg; //negative sample with negative prediction
 
-    public void setThreshold(double threshold)
-    {
-        this.threshold = threshold;
-    }
-
-    public void evaluateUsingLR(String weightFile, String testFile)
+    public void evaluateUsingLR(String testFile)
     {
         this.clearMetric();
-        this.loadWeightArrayList(weightFile);
         try{
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(testFile)));
             String line;
@@ -52,9 +47,7 @@ public class SimpleLiblinearEvaluator {
                 }
                 double tmpValue = getPrediction(values);
                 double value = logisticFunction(tmpValue);
-                int prediction = value >= threshold ? 1 : 0;
-//                System.out.printf("cnt = %d, tmpValue = %2f, value = %2f, threshold = %2f, prediction = %d\n", cnt, tmpValue, value, threshold, prediction );
-                updateMetric(target, prediction);
+                batchUpdateMetric(target, value);
             }
             bufferedReader.close();
         }catch(Exception e)
@@ -64,10 +57,9 @@ public class SimpleLiblinearEvaluator {
         printMetric();
     }
 
-    public void evaluateUsingSVM(String weightFile, String testFile)
+    public void evaluateUsingSVM(String testFile)
     {
         this.clearMetric();
-        this.loadWeightArrayList(weightFile);
         try{
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(testFile)));
             String line;
@@ -86,8 +78,7 @@ public class SimpleLiblinearEvaluator {
                     continue;
                 }
                 double value = getPrediction(values);
-                int prediction = value >= threshold ? 1 : 0;
-                updateMetric(target, prediction);
+                batchUpdateMetric(target, value);
             }
             bufferedReader.close();
         }catch(Exception e)
@@ -99,49 +90,64 @@ public class SimpleLiblinearEvaluator {
 
     private void printMetric()
     {
-        long testCallback = pos_pos + neg_pos;
-        long testClick = pos_pos;
-        double testCtr = (double)testClick/(double)testCallback;
-
-        long baseCallback = pos_pos + pos_neg + neg_pos + neg_neg;
-        long baseClick = pos_pos + pos_neg;
-        double baseCtr = (double)baseClick/(double)baseCallback;
-
-
-        System.out.println("Threshold = " + this.threshold);
-        System.out.printf("Base: click = %d, impression = %d, ctr = %2f\n", baseClick, baseCallback, baseCtr);
-        System.out.printf("Test: click = %d, impression = %d, ctr = %2f\n", testClick, testCallback, testCtr);
-        double improve = testCtr/baseCtr - 1;
-        System.out.printf("Ctr improve = %s \n", NumericalUtils.formatDecimal("##.##%", improve));
-        double recall = (double)testClick/(double)baseClick;
-        System.out.printf("Recall = %s\n", NumericalUtils.formatDecimal("##.##%", recall));
-        double score = improve * recall * 10000;
-        System.out.printf("Score = %s\n", NumericalUtils.formatDecimal("##.##", score));
+        System.out.println("Here comes the result");
         System.out.println("========================================================");
+        for(int i = 0; i < numOfBatch; i++)
+        {
+            long testCallback = pos_pos[i] + neg_pos[i];
+            long testClick = pos_pos[i];
+            double testCtr = (double)testClick/(double)testCallback;
+
+            long baseCallback = pos_pos[i] + pos_neg[i] + neg_pos[i] + neg_neg[i];
+            long baseClick = pos_pos[i] + pos_neg[i];
+            double baseCtr = (double)baseClick/(double)baseCallback;
+
+
+            System.out.printf("Threshold = %2f\n", (i * stepSize + base));
+            System.out.printf("Base: click = %d, impression = %d, ctr = %2f\n", baseClick, baseCallback, baseCtr);
+            System.out.printf("Test: click = %d, impression = %d, ctr = %2f\n", testClick, testCallback, testCtr);
+            double improve = testCtr/baseCtr - 1;
+            System.out.printf("Ctr improve = %s \n", NumericalUtils.formatDecimal("##.##%", improve));
+            double recall = (double)testClick/(double)baseClick;
+            System.out.printf("Recall = %s\n", NumericalUtils.formatDecimal("##.##%", recall));
+            double score = improve * recall * 10000;
+            System.out.printf("Score = %s\n", NumericalUtils.formatDecimal("##.##", score));
+            System.out.println("========================================================");
+        }
     }
 
-    private void updateMetric(int target, int prediction)
+    private void batchUpdateMetric(int target, double value)
+    {
+        for(int i = 0; i < numOfBatch; i++)
+        {
+            double threshold = stepSize * i + base;
+            int prediction = value > threshold ? 1 : 0;
+            updateMetric(target, prediction, i);
+        }
+    }
+
+    private void updateMetric(int target, int prediction, int index)
     {
         if(target == 1)
         {
             if(prediction == 1)
             {
-                pos_pos++;
+                pos_pos[index]++;
             }
             else
             {
-                pos_neg++;
+                pos_neg[index]++;
             }
         }
         else
         {
             if(prediction == 1)
             {
-                neg_pos++;
+                neg_pos[index]++;
             }
             else
             {
-                neg_neg++;
+                neg_neg[index]++;
             }
         }
     }
@@ -178,13 +184,13 @@ public class SimpleLiblinearEvaluator {
 
     private void clearMetric()
     {
-        this.pos_pos = 0;
-        this.pos_neg = 0;
-        this.neg_pos = 0;
-        this.neg_neg = 0;
+        this.pos_pos = new long[numOfBatch];
+        this.pos_neg = new long[numOfBatch];
+        this.neg_pos = new long[numOfBatch];
+        this.neg_neg = new long[numOfBatch];
     }
 
-    private void loadWeightArrayList(String weightFile)
+    public void loadWeightArrayList(String weightFile)
     {
         this.weightList = new ArrayList<Double>();
         try{
@@ -237,23 +243,16 @@ public class SimpleLiblinearEvaluator {
         }
 
         LiblinearTypes trainingType = LiblinearTypes.valueOf(type);
-        SimpleLiblinearEvaluator evaluator = new SimpleLiblinearEvaluator();
+        SimpleBatchLiblinearEvaluator evaluator = new SimpleBatchLiblinearEvaluator();
         if(trainingType == LiblinearTypes.LOGISTIC)
         {
-            for(int i = 0; i < 20; i++)
-            {
-                evaluator.setThreshold(0.05 + i * 0.05);
-                evaluator.evaluateUsingLR(weightFile, testFile);
-            }
+            evaluator.loadWeightArrayList(weightFile);
+            evaluator.evaluateUsingLR(testFile);
         }
         if(trainingType == LiblinearTypes.SVM)
         {
-            for(int i = 0; i < 20; i++)
-            {
-                evaluator.setThreshold(0.05 + i * 0.05);
-                evaluator.evaluateUsingSVM(weightFile,testFile);
-            }
+            evaluator.loadWeightArrayList(weightFile);
+            evaluator.evaluateUsingSVM(testFile);
         }
     }
-
 }
