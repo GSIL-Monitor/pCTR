@@ -106,11 +106,19 @@ public class CTRSampleControl {
             initFeatureId = sampleMaker.registerFeatureHandler(clientTypeHandler, initFeatureId);
             System.out.println("client type handler register succeed");
         }
+        //clicked ip
         if(config.isIpHandlerSwitch())
         {
             IpHandler ipHandler = new IpHandler();
             initFeatureId = sampleMaker.registerFeatureHandler(ipHandler, initFeatureId);
             System.out.println("ip handler register succeed");
+        }
+        //app version
+        if(config.isAppVersionHandler())
+        {
+            AppVersionHandler appVersionHandler = new AppVersionHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(appVersionHandler, initFeatureId);
+            System.out.println("app version handler register succeed");
         }
         //more feature handlers here
         return initFeatureId;
