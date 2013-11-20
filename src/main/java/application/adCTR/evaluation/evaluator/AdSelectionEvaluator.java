@@ -1,5 +1,6 @@
 package application.adCTR.evaluation.evaluator;
 
+import application.adCTR.evaluation.creative.CreativeInventory;
 import utils.FileUtils;
 import utils.NumericalUtils;
 
@@ -10,10 +11,12 @@ import java.util.ArrayList;
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
- * Date: 13-11-19
- * Time: 下午4:09
+ * Date: 13-11-20
+ * Time: 上午9:42
  */
-public class SimpleLiblinearEvaluator {
+public class AdSelectionEvaluator {
+    //creative inventory
+    CreativeInventory inventory = CreativeInventory.getInstance();
 
     private ArrayList<Double> weightList;
     private int weightSize = 0;
@@ -29,10 +32,9 @@ public class SimpleLiblinearEvaluator {
         this.threshold = threshold;
     }
 
-    public void evaluateUsingLR(String weightFile, String testFile)
+    public void evaluateUsingLR(String testFile)
     {
         this.clearMetric();
-        this.loadWeightArrayList(weightFile);
         try{
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(testFile)));
             String line;
@@ -50,10 +52,8 @@ public class SimpleLiblinearEvaluator {
                 {
                     continue;
                 }
-                double tmpValue = getPrediction(values);
-                double value = logisticFunction(tmpValue);
+                double value = logisticFunction(getPrediction(values));
                 int prediction = value >= threshold ? 1 : 0;
-//                System.out.printf("cnt = %d, tmpValue = %2f, value = %2f, threshold = %2f, prediction = %d\n", cnt, tmpValue, value, threshold, prediction );
                 updateMetric(target, prediction);
             }
             bufferedReader.close();
@@ -64,37 +64,9 @@ public class SimpleLiblinearEvaluator {
         printMetric();
     }
 
-    public void evaluateUsingSVM(String weightFile, String testFile)
+    public void evaluateUsingSVM(String testFile)
     {
         this.clearMetric();
-        this.loadWeightArrayList(weightFile);
-        try{
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(FileUtils.getStreamFromFile(testFile)));
-            String line;
-            long cnt = 0;
-            while( (line = bufferedReader.readLine()) != null)
-            {
-                cnt++;
-                if(cnt % 1000000 == 0)
-                {
-                    System.out.println("Evaluation " + cnt + " lines");
-                }
-                String[] values = line.split(" ");
-                int target = NumericalUtils.toInteger(values[0]);
-                if(target == Integer.MIN_VALUE)
-                {
-                    continue;
-                }
-                double value = getPrediction(values);
-                int prediction = value >= threshold ? 1 : 0;
-                updateMetric(target, prediction);
-            }
-            bufferedReader.close();
-        }catch(Exception e)
-        {
-            e.printStackTrace();
-        }
-        printMetric();
     }
 
     private void printMetric()
@@ -163,7 +135,7 @@ public class SimpleLiblinearEvaluator {
             {
                 continue;
             }
-            if(index > weightSize)
+            if(index >= weightSize)
             {
                 continue;
             }
@@ -180,7 +152,18 @@ public class SimpleLiblinearEvaluator {
         this.neg_neg = 0;
     }
 
-    private void loadWeightArrayList(String weightFile)
+    public void setupAdDataBase(String date)
+    {
+        int numOfCreative = inventory.loadCreativeFromDB();
+        if(numOfCreative < 0)
+        {
+            System.out.println("Loading Creative from Database Fail");
+            System.exit(-1);
+        }
+        System.out.println("Loading " + numOfCreative + " pieces of creative from database");
+    }
+
+    public void loadWeightArrayList(String weightFile)
     {
         this.weightList = new ArrayList<Double>();
         try{
@@ -233,23 +216,19 @@ public class SimpleLiblinearEvaluator {
         }
 
         LiblinearTypes trainingType = LiblinearTypes.valueOf(type);
-        SimpleLiblinearEvaluator evaluator = new SimpleLiblinearEvaluator();
+        AdSelectionEvaluator evaluator = new AdSelectionEvaluator();
+        evaluator.loadWeightArrayList(weightFile);
         if(trainingType == LiblinearTypes.LOGISTIC)
         {
-            for(int i = 0; i < 20; i++)
+            for(int i = 2; i < 14; i++)
             {
                 evaluator.setThreshold(0.05 + i * 0.05);
-                evaluator.evaluateUsingLR(weightFile, testFile);
+                evaluator.evaluateUsingLR(testFile);
             }
         }
         if(trainingType == LiblinearTypes.SVM)
         {
-            for(int i = 0; i < 20; i++)
-            {
-                evaluator.setThreshold(0.05 + i * 0.05);
-                evaluator.evaluateUsingSVM(weightFile,testFile);
-            }
+            evaluator.evaluateUsingSVM(testFile);
         }
     }
-
 }

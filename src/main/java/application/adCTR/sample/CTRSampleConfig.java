@@ -32,6 +32,7 @@ public class CTRSampleConfig {
     private boolean deviceTypeHandlerSwitch = false;
     private boolean osTypeHandlerSwitch = false;
     private boolean productTypeHandlerSwitch = false;
+    private boolean ipHandlerSwitch = false;
 
     private final String conf = "conf/CTRControl.properties";
 
@@ -61,6 +62,7 @@ public class CTRSampleConfig {
         this.deviceTypeHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("DeviceTypeHandler")) > 0;
         this.osTypeHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("OsTypeHandler")) > 0;
         this.productTypeHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("ProductTypeHandler")) > 0;
+        this.ipHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("IpHandler")) > 0;
     }
 
     public boolean isCastIDHandlerSwitch() {
@@ -93,5 +95,10 @@ public class CTRSampleConfig {
 
     public boolean isProductTypeHandlerSwitch() {
         return productTypeHandlerSwitch;
+    }
+
+    public boolean isIpHandlerSwitch()
+    {
+        return ipHandlerSwitch;
     }
 }
