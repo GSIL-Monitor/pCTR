@@ -34,6 +34,12 @@ public class CTRSampleConfig {
     private boolean productTypeHandlerSwitch = false;
     private boolean ipHandlerSwitch = false;
     private boolean appVersionHandlerSwitch = false;
+    private boolean subCategoryHandlerSwitch = false;
+    private boolean programIDHandlerSwitch = false;
+    private boolean videoIDHandlerSwitch = false;
+    private boolean isLongHandlerSwitch = false;
+    private boolean cityIDHandlerSwitch = false;
+
 
     private final String conf = "conf/CTRControl.properties";
 
@@ -65,6 +71,11 @@ public class CTRSampleConfig {
         this.productTypeHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("ProductTypeHandler")) > 0;
         this.ipHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("IpHandler")) > 0;
         this.appVersionHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("AppVersionHandler")) > 0;
+        this.subCategoryHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("SubCategoryHandler")) > 0;
+        this.programIDHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("ProgramIDHandler")) > 0;
+        this.videoIDHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("VideoIDHandler")) > 0;
+        this.isLongHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("IsLongHandler")) > 0;
+        this.cityIDHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("CityIDHandler")) > 0;
     }
 
     public boolean isCastIDHandlerSwitch() {
@@ -104,8 +115,33 @@ public class CTRSampleConfig {
         return ipHandlerSwitch;
     }
 
-    public boolean isAppVersionHandler()
+    public boolean isAppVersionHandlerSwitch()
     {
         return appVersionHandlerSwitch;
+    }
+
+    public boolean isSubCategoryHandlerSwitch()
+    {
+        return subCategoryHandlerSwitch;
+    }
+
+    public boolean isProgramIDHandlerSwitch()
+    {
+        return programIDHandlerSwitch;
+    }
+
+    public boolean isVideoIDHandlerSwitch()
+    {
+        return videoIDHandlerSwitch;
+    }
+
+    public boolean isIsLongHandlerSwitch()
+    {
+        return isLongHandlerSwitch;
+    }
+
+    public boolean isCityIDHandlerSwitch()
+    {
+        return cityIDHandlerSwitch;
     }
 }

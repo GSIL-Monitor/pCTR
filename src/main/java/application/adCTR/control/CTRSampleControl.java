@@ -114,11 +114,46 @@ public class CTRSampleControl {
             System.out.println("ip handler register succeed");
         }
         //app version
-        if(config.isAppVersionHandler())
+        if(config.isAppVersionHandlerSwitch())
         {
             AppVersionHandler appVersionHandler = new AppVersionHandler();
             initFeatureId = sampleMaker.registerFeatureHandler(appVersionHandler, initFeatureId);
             System.out.println("app version handler register succeed");
+        }
+        //sub category
+        if(config.isSubCategoryHandlerSwitch())
+        {
+            SubCategoryHandler subCategoryHandler = new SubCategoryHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(subCategoryHandler, initFeatureId);
+            System.out.println("sub category handler register succeed");
+        }
+        //program id
+        if(config.isProgramIDHandlerSwitch())
+        {
+            ProgramIDHandler programIDHandler = new ProgramIDHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(programIDHandler, initFeatureId);
+            System.out.println("program id handler register succeed");
+        }
+        //video id
+        if(config.isVideoIDHandlerSwitch())
+        {
+            VideoIDHandler videoIDHandler = new VideoIDHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(videoIDHandler, initFeatureId);
+            System.out.println("video id handler register succeed");
+        }
+        //islong
+        if(config.isIsLongHandlerSwitch())
+        {
+            IsLongHandler isLongHandler = new IsLongHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(isLongHandler, initFeatureId);
+            System.out.println("isLong handler register succeed");
+        }
+        //city id
+        if(config.isCityIDHandlerSwitch())
+        {
+            CityIDHandler cityIDHandler = new CityIDHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(cityIDHandler, initFeatureId);
+            System.out.println("city id handler register succeed");
         }
         //more feature handlers here
         return initFeatureId;
