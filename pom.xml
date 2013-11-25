@@ -50,11 +50,25 @@
             <version>3.8.1</version>
             <scope>test</scope>
         </dependency>
-        <!--<dependency>-->
-            <!--<groupId>com.youku.data</groupId>-->
-            <!--<artifactId>data-mr-common</artifactId>-->
-            <!--<version>1.4.6</version>-->
-        <!--</dependency>-->
+
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>5.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid</artifactId>
+            <version>0.2.26</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc</artifactId>
+            <version>6.0</version>
+        </dependency>
+
     </dependencies>
 
     <repositories>
