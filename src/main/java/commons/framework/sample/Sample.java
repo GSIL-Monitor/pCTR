@@ -60,4 +60,8 @@ public class Sample {
         return sbd.toString();
     }
 
+    public ArrayList<Feature> getFeatureArrayList()
+    {
+        return this.featureArrayList;
+    }
 }

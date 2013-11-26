@@ -24,9 +24,10 @@ public enum AdSelectorTypes {
 
     public static AdSelectorTypes toAdSelectorTypes(String typeName)
     {
-        if(isAdSelectorType(typeName))
+        String name = typeName.toUpperCase();
+        if(isAdSelectorType(name))
         {
-            return AdSelectorTypes.valueOf(typeName);
+            return AdSelectorTypes.valueOf(name);
         }
         return null;
     }

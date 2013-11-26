@@ -7,10 +7,7 @@ import utils.database.DataBaseNames;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
+import java.util.*;
 
 /**
  * Created with IntelliJ IDEA.
@@ -35,7 +32,7 @@ public class CreativeInventory {
     private HashMap<Integer, Creative> creativeStock = null;
     private HashMap<Integer, HashSet<Integer>> provinceToCitySet = null;
     private HashSet<Integer> nationalSet = null;
-    private HashMap<String, HashSet<Creative>> contextToCreativeMap = null;
+    private HashMap<String, Creative[]> contextToCreativeArrayMap = null;
 
     public void init(String datetime)
     {
@@ -172,7 +169,8 @@ public class CreativeInventory {
 
     private void createTargetConditions()
     {
-        this.contextToCreativeMap = new HashMap<String, HashSet<Creative>>();
+        this.contextToCreativeArrayMap = new HashMap<String, Creative[]>();
+        HashMap<String, HashSet<Creative>> contextToCreativeMap = new HashMap<String, HashSet<Creative>>();
         Iterator<Creative> creativeIterator = creativeStock.values().iterator();
         while(creativeIterator.hasNext())
         {
@@ -189,7 +187,33 @@ public class CreativeInventory {
             }
         }
 
-        System.out.println("There are " + contextToCreativeMap.size() + " context");
+        fillContextToCreativeArrayMap(contextToCreativeMap);
+        System.out.println("There are " + contextToCreativeArrayMap.size() + " context");
+    }
+
+    private void fillContextToCreativeArrayMap(HashMap<String, HashSet<Creative>> contextToCreativeMap)
+    {
+        Iterator<Map.Entry<String, HashSet<Creative>>> iterator = contextToCreativeMap.entrySet().iterator();
+        while(iterator.hasNext())
+        {
+            Map.Entry<String, HashSet<Creative>> entry = iterator.next();
+            Creative[] creativeArray = convertHashSetToArray(entry.getValue());
+            this.contextToCreativeArrayMap.put(entry.getKey(), creativeArray);
+        }
+    }
+
+    private Creative[] convertHashSetToArray(HashSet<Creative> set)
+    {
+        Creative[] array = new Creative[set.size()];
+        Iterator<Creative> iterator = set.iterator();
+        int index = 0;
+        while(iterator.hasNext())
+        {
+            array[index] = iterator.next();
+            index++;
+        }
+
+        return array;
     }
 
     public boolean isCreativeSubstitutable(int creativeID)
@@ -202,21 +226,8 @@ public class CreativeInventory {
      * @param context
      * @return
      */
-    public HashSet<Creative> getCreativeSetByContext(String context)
+    public Creative[] getCreativeSetByContext(String context)
     {
-        return contextToCreativeMap.containsKey(context) ? contextToCreativeMap.get(context) : null;
-    }
-
-    /**
-     * for test only
-     */
-    public void printCreative()
-    {
-        Iterator<Creative> iter = this.creativeStock.values().iterator();
-        while(iter.hasNext())
-        {
-            Creative creative = iter.next();
-            System.out.println(creative.getCreativeId() + "  " + creative.getCastId());
-        }
+        return contextToCreativeArrayMap.containsKey(context) ? contextToCreativeArrayMap.get(context) : new Creative[0];
     }
 }

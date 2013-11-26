@@ -9,10 +9,8 @@ import commons.framework.data.DataInstance;
  * Time: 下午3:08
  */
 public class CTRDataInstance extends DataInstance {
-    public CTRDataInstance(long dataInstanceId)
-    {
-        this.dataInstanceId = dataInstanceId;
-    }
+
+    private long dataInstanceId;
     private double targetValue = Double.MIN_VALUE;
     private int version = -1;
     private long timeStamp = -1;
@@ -44,6 +42,15 @@ public class CTRDataInstance extends DataInstance {
     private int cityId = -1;
     private boolean isFullScreen = false;
     private String keywords = null;
+
+    public CTRDataInstance(long dataInstanceId)
+    {
+        this.dataInstanceId = dataInstanceId;
+    }
+
+    public long getDataInstanceId() {
+        return dataInstanceId;
+    }
 
     public int getCityId()
     {
