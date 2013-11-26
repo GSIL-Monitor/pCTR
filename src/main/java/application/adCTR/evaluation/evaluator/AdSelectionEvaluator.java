@@ -1,5 +1,8 @@
 package application.adCTR.evaluation.evaluator;
 
+import application.adCTR.evaluation.adSelector.AdSelectorTypes;
+import application.adCTR.evaluation.adSelector.IAdSelector;
+import application.adCTR.evaluation.adSelector.SimpleAdSelector;
 import application.adCTR.evaluation.creative.CreativeInventory;
 import utils.FileUtils;
 import utils.NumericalUtils;
@@ -21,9 +24,12 @@ public class AdSelectionEvaluator {
     private DataBaseManager dataBaseManager = null;
     private String datetime = null;
 
-    private ArrayList<Double> weightList;
-    private int weightSize = 0;
-    private double threshold = 0.5;
+    //evaluation parameters
+    private IAdSelector adSelector;
+    private AdSelectionEvaluatorConfig config;
+    private int numOfBatch;
+    private double base;
+    private double stepSize;
 
     private long pos_pos; //positive sample with positive prediction
     private long pos_neg; //positive sample with negative prediction
@@ -35,7 +41,7 @@ public class AdSelectionEvaluator {
         this.datetime = datetime;
     }
 
-    public void initAdSelector()
+    public void initAdSelector(String adSelectorModelFile)
     {
         dataBaseManager = DataBaseManager.getInstance();
         dataBaseManager.init();
@@ -44,6 +50,42 @@ public class AdSelectionEvaluator {
 
         inventory = CreativeInventory.getInstance();
         inventory.init(datetime);
+        System.out.println("init creative inventory succeed");
+        System.out.println("======================================================");
+
+        this.config = AdSelectionEvaluatorConfig.getInstance();
+        this.setThresholdParameters();
+        System.out.println("init evaluation parameters succeed");
+        System.out.println("======================================================");
+
+        long numOfFeatures = this.adSelector.loadModel(adSelectorModelFile);
+        if(numOfFeatures < 0)
+        {
+            System.out.println("loading models from " + adSelectorModelFile + " fail");
+            System.exit(-1);
+        }
+        System.out.println("init ad selector succeed, there are " + numOfFeatures + " features in total");
+        System.out.println("======================================================");
+    }
+
+    private void setThresholdParameters()
+    {
+        this.numOfBatch = config.getNumOfBatch();
+        this.base = config.getBase();
+        this.stepSize = config.getStepSize();
+        setAdSelector(config.getAdSelectorType());
+    }
+
+    private void setAdSelector(AdSelectorTypes adSelectorType)
+    {
+        switch (adSelectorType){
+            case SIMPLE_AD_SELECTOR:
+                this.adSelector = SimpleAdSelector.getInstance();
+                break;
+            default:
+                System.out.println("wrong type of adSelector");
+                System.exit(-1);
+        }
     }
 
     public void checkCreative()
@@ -54,10 +96,11 @@ public class AdSelectionEvaluator {
     public static void main(String[] args)
     {
         String datetime = "2013-11-16";
+        String modelFile = "";
         System.out.println("prepare evaluation for date : " + datetime);
         AdSelectionEvaluator evaluator = new AdSelectionEvaluator(datetime);
 
-        evaluator.initAdSelector();
+        evaluator.initAdSelector(modelFile);
         evaluator.checkCreative();
         System.out.println("init done");
     }

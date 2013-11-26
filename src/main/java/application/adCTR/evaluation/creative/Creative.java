@@ -10,11 +10,12 @@ import java.util.Iterator;
  * Date: 13-11-15
  * Time: 上午10:10
  */
-public class Creative {
+public class Creative implements Comparable<Creative>{
     private int creativeId;
     private int castId;
     private HashSet<Integer> targetCities = null;
     private HashSet<String> targetChannels = null;
+    private double score = 0;
 
     public Creative(int creativeId, int castId)
     {
@@ -23,6 +24,16 @@ public class Creative {
 
         targetCities = new HashSet<Integer>();
         targetChannels = new HashSet<String>();
+    }
+
+    public void setScore(double score)
+    {
+        this.score = score;
+    }
+
+    public double getScore()
+    {
+        return this.score;
     }
 
     public int getCreativeId() {
@@ -72,5 +83,10 @@ public class Creative {
         }
 
         return contextList;
+    }
+
+    @Override
+    public int compareTo(Creative c) {
+        return score - c.getScore() >= 0 ? 1 : 0;
     }
 }

@@ -20,11 +20,12 @@ import java.util.HashMap;
  * Time: 上午9:29
  */
 public class CastIDHandler implements IFeatureHandler{
-    private final String castIDFeatureConf = "featureHandlerConf/castClickRate.conf";
+//    private final String castIDFeatureConf = "featureHandlerConf/castClickRate.conf";
+    private final String castIDFeatureConf = "featureHandlerConf/castID.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<Integer,Feature> castClickRateMap = null;
-    private final int numOfFields = 4;
+    private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
         castClickRateMap = new HashMap<Integer, Feature>();
@@ -42,13 +43,19 @@ public class CastIDHandler implements IFeatureHandler{
                     continue;
                 }
                 Integer castID = NumericalUtils.toInteger(contents[0]);
-                double clickRate =  NumericalUtils.toDouble(contents[3]);
-                if(!castClickRateMap.containsKey(castID) && !Double.isNaN(clickRate))
+//                double clickRate =  NumericalUtils.toDouble(contents[3]);
+//                if(!castClickRateMap.containsKey(castID) && !Double.isNaN(clickRate))
+//                {
+//                    cntOfCastID++;
+//                    sumOfAvgClickRate += clickRate;
+//                    int localId = 1;//for real value feature, we use local id = 1;
+//                    Feature feature = new Feature(localId + initFeatureId, "castClickRate", contents[3]);
+//                    castClickRateMap.put(castID, feature);
+//                }
+                if(!castClickRateMap.containsKey(castID))
                 {
-                    cntOfCastID++;
-                    sumOfAvgClickRate += clickRate;
-                    int localId = 1;//for real value feature, we use local id = 1;
-                    Feature feature = new Feature(localId + initFeatureId, "castClickRate", contents[3]);
+                    int localId = NumericalUtils.toInteger(contents[1]);
+                    Feature feature = new Feature(localId + initFeatureId, "castID", "1");
                     castClickRateMap.put(castID, feature);
                 }
             }
@@ -65,8 +72,10 @@ public class CastIDHandler implements IFeatureHandler{
              * for unseen feature, we set its click rate as average of all
              * its feature local id is the same as everyone else
              */
-            maxFeatureId = initFeatureId + 1;
-            unseenFeature = new Feature(maxFeatureId,"castClickRate",String.valueOf(sumOfAvgClickRate/(cntOfCastID+0.0000001)));
+//            maxFeatureId = initFeatureId + 1;
+//            unseenFeature = new Feature(maxFeatureId,"castClickRate",String.valueOf(sumOfAvgClickRate/(cntOfCastID+0.0000001)));
+            maxFeatureId = initFeatureId + castClickRateMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"castID", "1");
         }
         return maxFeatureId;
     }

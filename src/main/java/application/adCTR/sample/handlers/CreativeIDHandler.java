@@ -20,11 +20,12 @@ import java.util.HashMap;
  * Time: 上午9:39
  */
 public class CreativeIDHandler implements IFeatureHandler {
-    private final String creativeIDFeatureConf = "featureHandlerConf/creativeClickRate.conf";
+//    private final String creativeIDFeatureConf = "featureHandlerConf/creativeClickRate.conf";
+    private final String creativeIDFeatureConf = "featureHandlerConf/creativeID.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<Integer,Feature> creativeClickRateMap = null;
-    private final int numOfFields = 4;
+    private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
         creativeClickRateMap = new HashMap<Integer, Feature>();
@@ -42,13 +43,19 @@ public class CreativeIDHandler implements IFeatureHandler {
                     continue;
                 }
                 Integer creativeID = NumericalUtils.toInteger(contents[0]);
-                double clickRate =  NumericalUtils.toDouble(contents[3]);
-                if(!creativeClickRateMap.containsKey(creativeID) && !Double.isNaN(clickRate))
+//                double clickRate =  NumericalUtils.toDouble(contents[3]);
+//                if(!creativeClickRateMap.containsKey(creativeID) && !Double.isNaN(clickRate))
+//                {
+//                    cntOfCreativeID++;
+//                    sumOfAvgClickRate += clickRate;
+//                    int localId = 1;//for real value feature, we use local id = 1;
+//                    Feature feature = new Feature(localId + initFeatureId, "creativeClickRate", contents[3]);
+//                    creativeClickRateMap.put(creativeID, feature);
+//                }
+                if(!creativeClickRateMap.containsKey(creativeID))
                 {
-                    cntOfCreativeID++;
-                    sumOfAvgClickRate += clickRate;
-                    int localId = 1;//for real value feature, we use local id = 1;
-                    Feature feature = new Feature(localId + initFeatureId, "creativeClickRate", contents[3]);
+                    int localId = NumericalUtils.toInteger(contents[1]);//for real value feature, we use local id = 1;
+                    Feature feature = new Feature(localId + initFeatureId, "creativeID", "1");
                     creativeClickRateMap.put(creativeID, feature);
                 }
             }
@@ -65,8 +72,9 @@ public class CreativeIDHandler implements IFeatureHandler {
              * for unseen feature, we set its click rate as average of all
              * its feature local id is the same as everyone else
              */
-            maxFeatureId = initFeatureId + 1;
-            unseenFeature = new Feature(maxFeatureId,"creativeClickRate",String.valueOf(sumOfAvgClickRate/(cntOfCreativeID+0.0000001)));
+            maxFeatureId = initFeatureId + creativeClickRateMap.size() + 1;
+//            unseenFeature = new Feature(maxFeatureId,"creativeID",String.valueOf(sumOfAvgClickRate/(cntOfCreativeID+0.0000001)));
+            unseenFeature = new Feature(maxFeatureId, "creativeID", "1");
         }
         return maxFeatureId;
     }

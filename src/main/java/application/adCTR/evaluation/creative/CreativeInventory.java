@@ -192,6 +192,11 @@ public class CreativeInventory {
         System.out.println("There are " + contextToCreativeMap.size() + " context");
     }
 
+    public boolean isCreativeSubstitutable(int creativeID)
+    {
+        return creativeStock.containsKey(creativeID);
+    }
+
     /**
      * select creative candidates by context, it should be the job of atm in online environment
      * @param context
