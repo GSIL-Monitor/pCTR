@@ -1,4 +1,4 @@
-package application.adCTR.evaluation.evaluator;
+package application.adCTR.evaluation.adSelectionEvaluator;
 
 /**
  * Created with IntelliJ IDEA.

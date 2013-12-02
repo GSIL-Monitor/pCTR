@@ -16,20 +16,20 @@ import java.util.HashMap;
 /**
  * Created with IntelliJ IDEA.
  * Author: zhangcen
- * Date: 13-11-18
- * Time: 上午9:29
+ * Date: 13-11-28
+ * Time: 下午2:12
  */
-public class CastIDHandler implements IFeatureHandler{
-    private final String castIDFeatureConf = "featureHandlerConf/castID.conf";
+public class CookieClickRateHandler implements IFeatureHandler {
+    private final String cookieClickRateFeatureConf = "featureHandlerConf/cookieClickRate.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
-    private HashMap<Integer,Feature> castIDMap = null;
-    private final int numOfFields = 2;
+    private HashMap<String,Feature> cookieClickRateMap = null;
+    private final int numOfFields = 4;
     @Override
     public int initFeatureHandler(int initFeatureId) {
-        castIDMap = new HashMap<Integer, Feature>();
+        cookieClickRateMap = new HashMap<String, Feature>();
         try{
-            InputStream is = FileUtils.getStreamFromFile(castIDFeatureConf);
+            InputStream is = FileUtils.getStreamFromFile(cookieClickRateFeatureConf);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
             String line = null;
             while((line = bufferedReader.readLine()) != null)
@@ -39,12 +39,13 @@ public class CastIDHandler implements IFeatureHandler{
                 {
                     continue;
                 }
-                Integer castID = NumericalUtils.toInteger(contents[0]);
-                Integer localId = NumericalUtils.toInteger(contents[1]);
-                if(!castIDMap.containsKey(castID) && localId != Integer.MIN_VALUE)
+                String cookie = contents[0];
+                double clickRate =  NumericalUtils.toDouble(contents[3]);
+                if(!cookieClickRateMap.containsKey(cookie) && !Double.isNaN(clickRate))
                 {
-                    Feature feature = new Feature(localId + initFeatureId, "castID", "1");
-                    castIDMap.put(castID, feature);
+                    int localId = 1;//for real value feature, we use local id = 1;
+                    Feature feature = new Feature(localId + initFeatureId, "cookieClickRate", contents[3]);
+                    cookieClickRateMap.put(cookie, feature);
                 }
             }
             bufferedReader.close();
@@ -52,7 +53,7 @@ public class CastIDHandler implements IFeatureHandler{
         }catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("init cast id feature fail");
+            System.out.println("init cookie click rate feature fail");
         }finally
         {
             /**
@@ -60,8 +61,8 @@ public class CastIDHandler implements IFeatureHandler{
              * for unseen feature, we set its click rate as average of all
              * its feature local id is the same as everyone else
              */
-            maxFeatureId = initFeatureId + castIDMap.size() + 1;
-            unseenFeature = new Feature(maxFeatureId,"castID", "1");
+            maxFeatureId = initFeatureId + 1 + 1;
+            unseenFeature = new Feature(maxFeatureId,"cookieClickRate","1");
         }
         return maxFeatureId;
     }
@@ -71,10 +72,10 @@ public class CastIDHandler implements IFeatureHandler{
         ArrayList<Feature> featureArrayList = new ArrayList<Feature>();
         if(dataInstance instanceof CTRDataInstance)
         {
-            int castId = ((CTRDataInstance) dataInstance).getCastId();
-            if(castIDMap.containsKey(castId))
+            String cookie = ((CTRDataInstance) dataInstance).getCookie();
+            if(cookieClickRateMap.containsKey(cookie))
             {
-                featureArrayList.add(castIDMap.get(castId));
+                featureArrayList.add(cookieClickRateMap.get(cookie));
             }
             else {
                 featureArrayList.add(unseenFeature);
@@ -83,5 +84,3 @@ public class CastIDHandler implements IFeatureHandler{
         return featureArrayList;
     }
 }
-
-

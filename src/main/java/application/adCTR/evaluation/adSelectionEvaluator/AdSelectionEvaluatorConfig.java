@@ -1,8 +1,9 @@
-package application.adCTR.evaluation.evaluator;
+package application.adCTR.evaluation.adSelectionEvaluator;
 
 import application.adCTR.evaluation.adSelector.AdSelectorTypes;
 import utils.FileUtils;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -34,7 +35,8 @@ public class AdSelectionEvaluatorConfig {
     {
         try{
             Properties properties = new Properties();
-            properties.load(FileUtils.getStreamFromFile(configFile));
+            InputStream is = FileUtils.getStreamFromFile(configFile);
+            properties.load(is);
 
             this.numOfBatch = Integer.parseInt(properties.getProperty("numOfBatch"));
             this.base = Double.parseDouble(properties.getProperty("base"));
@@ -42,6 +44,7 @@ public class AdSelectionEvaluatorConfig {
             this.adSelectorType = AdSelectorTypes.toAdSelectorTypes(properties.getProperty("adSelectorType"));
 
             System.out.println("ad selector config loaded");
+            is.close();
         }catch (Exception e)
         {
             setDefaultParameters();

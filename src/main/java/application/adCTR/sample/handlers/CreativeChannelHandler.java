@@ -20,17 +20,14 @@ import java.util.HashMap;
  * Time: 上午10:24
  */
 public class CreativeChannelHandler implements IFeatureHandler {
-//    private final String creativeChannelFeatureConf = "featureHandlerConf/creativeCategoryClickRate.conf";
     private final String creativeChannelFeatureConf = "featureHandlerConf/creativeCategoryID.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
-    private HashMap<String,Feature> creativeChannelClickRateMap = null;
+    private HashMap<String,Feature> creativeChannelIDMap = null;
     private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
-        creativeChannelClickRateMap = new HashMap<String, Feature>();
-        int cntOfCreativeChannelCombo = 0;
-        double sumOfAvgClickRate = 0;
+        creativeChannelIDMap = new HashMap<String, Feature>();
         try{
             InputStream is = FileUtils.getStreamFromFile(creativeChannelFeatureConf);
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(is));
@@ -43,20 +40,11 @@ public class CreativeChannelHandler implements IFeatureHandler {
                     continue;
                 }
                 String creativeChannelCombo = contents[0];
-//                double clickRate =  NumericalUtils.toDouble(contents[3]);
-//                if(!creativeChannelClickRateMap.containsKey(creativeChannelCombo) && !Double.isNaN(clickRate))
-//                {
-//                    cntOfCreativeChannelCombo++;
-//                    sumOfAvgClickRate += clickRate;
-//                    int localId = 1;//for real value feature, we use local id = 1;
-//                    Feature feature = new Feature(localId + initFeatureId, "creativeChannelClickRate", contents[3]);
-//                    creativeChannelClickRateMap.put(creativeChannelCombo, feature);
-//                }
-                if(!creativeChannelClickRateMap.containsKey(creativeChannelCombo))
+                int localId = NumericalUtils.toInteger(contents[1]);
+                if(!creativeChannelIDMap.containsKey(creativeChannelCombo) && localId != Integer.MIN_VALUE)
                 {
-                    int localId = NumericalUtils.toInteger(contents[1]);//for real value feature, we use local id = 1;
                     Feature feature = new Feature(localId + initFeatureId, "creativeChannelID", "1");
-                    creativeChannelClickRateMap.put(creativeChannelCombo, feature);
+                    creativeChannelIDMap.put(creativeChannelCombo, feature);
                 }
             }
             bufferedReader.close();
@@ -64,7 +52,7 @@ public class CreativeChannelHandler implements IFeatureHandler {
         }catch (Exception e)
         {
             e.printStackTrace();
-            System.out.println("init creative channel feature fail");
+            System.out.println("init creative channel id feature fail");
         }finally
         {
             /**
@@ -72,7 +60,7 @@ public class CreativeChannelHandler implements IFeatureHandler {
              * for unseen feature, we set its click rate as average of all
              * its feature local id is the same as everyone else
              */
-            maxFeatureId = initFeatureId + creativeChannelClickRateMap.size() + 1;
+            maxFeatureId = initFeatureId + creativeChannelIDMap.size() + 1;
             unseenFeature = new Feature(maxFeatureId,"creativeChannelID","1");
         }
         return maxFeatureId;
@@ -84,9 +72,9 @@ public class CreativeChannelHandler implements IFeatureHandler {
         if(dataInstance instanceof CTRDataInstance)
         {
             String creativeChannelCombo = String.format("%d_%s", ((CTRDataInstance) dataInstance).getCreativeId(), ((CTRDataInstance) dataInstance).getCategory());
-            if(creativeChannelClickRateMap.containsKey(creativeChannelCombo))
+            if(creativeChannelIDMap.containsKey(creativeChannelCombo))
             {
-                featureArrayList.add(creativeChannelClickRateMap.get(creativeChannelCombo));
+                featureArrayList.add(creativeChannelIDMap.get(creativeChannelCombo));
             }
             else {
                 featureArrayList.add(unseenFeature);

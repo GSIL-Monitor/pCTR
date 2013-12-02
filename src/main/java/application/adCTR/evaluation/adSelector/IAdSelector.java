@@ -1,7 +1,7 @@
 package application.adCTR.evaluation.adSelector;
 
 import application.adCTR.evaluation.creative.Creative;
-import application.adCTR.evaluation.evaluator.MetricTypes;
+import application.adCTR.evaluation.adSelectionEvaluator.MetricTypes;
 import commons.framework.data.DataInstance;
 
 import java.util.ArrayList;

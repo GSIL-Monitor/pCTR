@@ -20,11 +20,11 @@ import java.util.HashMap;
  * Time: 下午6:07
  */
 public class SubCategoryHandler implements IFeatureHandler {
-    private final String subCategoryFeatureConf = "featureHandlerConf/subCategory_click.conf";
+    private final String subCategoryFeatureConf = "featureHandlerConf/subCategory.conf";
     private int maxFeatureId = 0;
     private Feature unseenFeature = null;
     private HashMap<String,Feature> subCategoryFeatureHashMap = null;
-    private final int numOfFields = 4;
+    private final int numOfFields = 2;
     @Override
     public int initFeatureHandler(int initFeatureId) {
         subCategoryFeatureHashMap = new HashMap<String, Feature>();
@@ -40,11 +40,10 @@ public class SubCategoryHandler implements IFeatureHandler {
                     continue;
                 }
                 String subCategory = contents[0];
-                double clickRate = NumericalUtils.toDouble(contents[3]);
-                if(!subCategoryFeatureHashMap.containsKey(subCategory))
+                int localId = NumericalUtils.toInteger(contents[1]);
+                if(!subCategoryFeatureHashMap.containsKey(subCategory) && localId != Integer.MIN_VALUE)
                 {
-                    int localId = 1;
-                    Feature feature = new Feature(localId+initFeatureId,"subCategory",String.valueOf(clickRate));
+                    Feature feature = new Feature(localId+initFeatureId,"subCategory","1");
                     subCategoryFeatureHashMap.put(subCategory, feature);
                 }
             }
@@ -57,8 +56,8 @@ public class SubCategoryHandler implements IFeatureHandler {
         }finally
         {
             //deal with unseen feature
-            maxFeatureId = initFeatureId + 1;
-            unseenFeature = new Feature(maxFeatureId,"subCategory","0");
+            maxFeatureId = initFeatureId + subCategoryFeatureHashMap.size() + 1;
+            unseenFeature = new Feature(maxFeatureId,"subCategory","1");
         }
         return maxFeatureId;
     }

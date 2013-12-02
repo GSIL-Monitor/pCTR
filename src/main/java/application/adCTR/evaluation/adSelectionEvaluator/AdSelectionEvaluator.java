@@ -1,4 +1,4 @@
-package application.adCTR.evaluation.evaluator;
+package application.adCTR.evaluation.adSelectionEvaluator;
 
 import application.adCTR.data.CTRDataInstance;
 import application.adCTR.data.CTRDataInstanceMaker;
@@ -54,6 +54,10 @@ public class AdSelectionEvaluator {
     private long[] unclickedPositionIndex;
     private long sumOfClickedPositionIndex;
     private long sumOfUnclickedPositionIndex;
+    private long unFind;
+    private long unFindClick;
+    private long unFindNoClick;
+    private long unSubstitutable;
 
     public AdSelectionEvaluator(String datetime)
     {
@@ -154,6 +158,7 @@ public class AdSelectionEvaluator {
             if(!inventory.isCreativeSubstitutable(originCreativeID))//not substitutable
             {
                 updateIndexMetricWithOriginCreative(dataInstance.getTargetValue());
+                unSubstitutable++;
                 continue;
             }
 
@@ -171,7 +176,7 @@ public class AdSelectionEvaluator {
             ArrayList<Creative> creativeArrayList = adSelector.selectAdFromPool(dataInstance, allCandidateCreative, MetricTypes.INDEX);
             updateIndexMetricWithCreativeList(creativeArrayList, originCreativeID, targetValue);
         }
-
+        dataSource.close();
         System.out.println("Evaluation done......");
         System.out.println("======================================================");
         return id;
@@ -179,17 +184,20 @@ public class AdSelectionEvaluator {
 
     private void updateIndexMetricWithOriginCreative(double targetValue)
     {
+        unFind++;
         if(targetValue > 0)//clicked in data source
         {
             numOfRight++;
             sumOfClickedPositionIndex++;
             clickedPositionIndex[0]++;
+            unFindClick++;
         }
         else
         {
             numOfRight++;
             sumOfUnclickedPositionIndex++;
             unclickedPositionIndex[0]++;
+            unFindNoClick++;
         }
     }
 
@@ -232,6 +240,8 @@ public class AdSelectionEvaluator {
         System.out.println("Index Metric For This Model:");
         double rightRatio = (double)numOfRight/(double)(numOfRight+numOfWrong);
         System.out.printf("right = %d, wrong = %d, right ratio = %s\n", numOfRight, numOfWrong, NumericalUtils.formatDecimal("##.##%",rightRatio));
+        System.out.println("=========================================================");
+        System.out.printf("unFind = %d, unFindClick = %d, unFindNoClick = %d, unSubstitutable = %d\n", unFind, unFindClick, unFindNoClick, unSubstitutable);
         System.out.println("=========================================================");
         System.out.println("For Clicked Data Source, The Distribution of Our Model is: ");
         double sum = 0;
@@ -336,7 +346,7 @@ public class AdSelectionEvaluator {
                 batchUpdateCTRMetric(selectedCreative, originCreativeID, targetValue);
             }
         }
-
+        dataSource.close();
         System.out.println("Evaluation done......");
         System.out.println("======================================================");
         return id;

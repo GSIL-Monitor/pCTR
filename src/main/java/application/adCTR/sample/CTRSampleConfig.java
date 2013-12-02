@@ -3,6 +3,7 @@ package application.adCTR.sample;
 import utils.FileUtils;
 import utils.NumericalUtils;
 
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -39,6 +40,8 @@ public class CTRSampleConfig {
     private boolean videoIDHandlerSwitch = false;
     private boolean isLongHandlerSwitch = false;
     private boolean cityIDHandlerSwitch = false;
+    private boolean cookieClickRateSwitch = false;
+    private boolean cookieCreativeClickRateSwitch = false;
 
 
     private final String conf = "conf/CTRControl.properties";
@@ -47,8 +50,11 @@ public class CTRSampleConfig {
     {
         try{
             Properties properties = new Properties();
-            properties.load(FileUtils.getStreamFromFile(conf));
+            InputStream is = FileUtils.getStreamFromFile(conf);
+            properties.load(is);
             this.setParameters(properties);
+
+            is.close();
         }catch(Exception e)
         {
             e.printStackTrace();
@@ -76,6 +82,8 @@ public class CTRSampleConfig {
         this.videoIDHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("VideoIDHandler")) > 0;
         this.isLongHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("IsLongHandler")) > 0;
         this.cityIDHandlerSwitch = NumericalUtils.toInteger(properties.getProperty("CityIDHandler")) > 0;
+        this.cookieClickRateSwitch = NumericalUtils.toInteger(properties.getProperty("CookieClickRateHandler")) > 0;
+        this.cookieCreativeClickRateSwitch = NumericalUtils.toInteger(properties.getProperty("CookieCreativeClickRateHandler")) > 0;
     }
 
     public boolean isCastIDHandlerSwitch() {
@@ -143,5 +151,15 @@ public class CTRSampleConfig {
     public boolean isCityIDHandlerSwitch()
     {
         return cityIDHandlerSwitch;
+    }
+
+    public boolean isCookieClickRateSwitch()
+    {
+        return cookieClickRateSwitch;
+    }
+
+    public boolean isCookieCreativeClickRateSwitch()
+    {
+        return cookieCreativeClickRateSwitch;
     }
 }

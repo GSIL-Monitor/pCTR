@@ -3,6 +3,7 @@ package utils.database;
 import utils.FileUtils;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Properties;
 
 /**
@@ -27,7 +28,8 @@ public class DataBaseConfig {
     public void loadConfigFromFile(String configFile) throws IOException
     {
         Properties properties = new Properties();
-        properties.load(FileUtils.getStreamFromFile(configFile));
+        InputStream is = FileUtils.getStreamFromFile(configFile);
+        properties.load(is);
 
         this.dataBaseType = properties.getProperty("database_type");
         this.host = properties.getProperty("host");
@@ -35,6 +37,8 @@ public class DataBaseConfig {
         this.sid = properties.getProperty("sid");
         this.userName = properties.getProperty("user");
         this.password = properties.getProperty("password");
+
+        is.close();
     }
 
     public DataBaseNames getDataBaseName(){

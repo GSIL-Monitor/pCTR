@@ -2,7 +2,7 @@ package application.adCTR.evaluation.adSelector;
 
 import application.adCTR.data.CTRDataInstance;
 import application.adCTR.evaluation.creative.Creative;
-import application.adCTR.evaluation.evaluator.MetricTypes;
+import application.adCTR.evaluation.adSelectionEvaluator.MetricTypes;
 import application.adCTR.sample.CTRSampleConfig;
 import application.adCTR.sample.CreativeBasedSampleMaker;
 import application.adCTR.sample.CreativeIrrelevantSampleMaker;
@@ -83,11 +83,11 @@ public class SimpleAdSelector implements IAdSelector{
         ArrayList<Creative> returnCreativeList = new ArrayList<Creative>(creativePool.length);
         CTRDataInstance ctrDataInstance = (CTRDataInstance) dataInstance;
         //first we have a base score, which is irrelevant to the creative information
-        double baseScore = calcBaseScore(ctrDataInstance);
+//        double baseScore = calcBaseScore(ctrDataInstance);
         for(int i = 0; i < creativePool.length; i++)
         {
             Creative creative = creativePool[i];
-            double score = calcScore(ctrDataInstance, creative) + baseScore;
+            double score = calcScore(ctrDataInstance, creative);
             creative.setScore(score);
             returnCreativeList.add(creative);
         }
@@ -300,7 +300,23 @@ public class SimpleAdSelector implements IAdSelector{
             initFeatureId = creativeIrrelevantSampleMaker.registerFeatureHandler(cityIDHandler, initFeatureId);
             System.out.println("city id handler register succeed");
         }
+        //cookie click rate
+        if(config.isCookieClickRateSwitch())
+        {
+            CookieClickRateHandler cookieClickRateHandler = new CookieClickRateHandler();
+            initFeatureId = creativeIrrelevantSampleMaker.registerFeatureHandler(cookieClickRateHandler, initFeatureId);
+            System.out.println("cookie click rate handler register succeed");
+        }
+        //cookie creative click rate
+        if(config.isCookieCreativeClickRateSwitch())
+        {
+            CookieCreativeClickRateHandler cookieCreativeClickRateHandler = new CookieCreativeClickRateHandler();
+            initFeatureId = creativeBasedSampleMaker.registerFeatureHandler(cookieCreativeClickRateHandler, initFeatureId);
+            System.out.println("cookie creative click rate handler register succeed");
+        }
         //more feature handlers here
+
+        System.out.println("features in model = " + weightSize + " and features in handler = " + initFeatureId);
         return initFeatureId;
     }
 }

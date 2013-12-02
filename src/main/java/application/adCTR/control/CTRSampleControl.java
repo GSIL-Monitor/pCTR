@@ -155,6 +155,20 @@ public class CTRSampleControl {
             initFeatureId = sampleMaker.registerFeatureHandler(cityIDHandler, initFeatureId);
             System.out.println("city id handler register succeed");
         }
+        //cookie click rate
+        if(config.isCookieClickRateSwitch())
+        {
+            CookieClickRateHandler cookieClickRateHandler = new CookieClickRateHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(cookieClickRateHandler, initFeatureId);
+            System.out.println("cookie click rate handler register succeed");
+        }
+        //cookie creative click rate
+        if(config.isCookieCreativeClickRateSwitch())
+        {
+            CookieCreativeClickRateHandler cookieCreativeClickRateHandler = new CookieCreativeClickRateHandler();
+            initFeatureId = sampleMaker.registerFeatureHandler(cookieCreativeClickRateHandler, initFeatureId);
+            System.out.println("cookie creative click rate handler register succeed");
+        }
         //more feature handlers here
         return initFeatureId;
     }
@@ -304,6 +318,7 @@ public class CTRSampleControl {
 
         SampleType sampleType = SampleType.valueOf(inputType);
         long numOfSamples = this.generateSamplesFromFile(infile,outFile,sampleType);
+        dataSource.close();
         return numOfSamples;
     }
 
