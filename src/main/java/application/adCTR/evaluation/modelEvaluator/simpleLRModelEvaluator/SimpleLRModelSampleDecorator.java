@@ -38,10 +38,10 @@ public class SimpleLRModelSampleDecorator {
             {
                 continue;
             }
-            int id = NumericalUtils.toInteger(parts[0]);
+            int id = NumericalUtils.toInteger(contents[0]);
             if(id != Integer.MIN_VALUE)
             {
-                Feature feature = new Feature(id, "", parts[1]);
+                Feature feature = new Feature(id, "", contents[1]);
                 featureArrayList.add(feature);
             }
         }

@@ -28,10 +28,6 @@ public class Sample {
         this.featureArrayList.addAll(newFeatures);
     }
 
-    public void setPredictValue(double predictValue) {
-        this.predictValue = predictValue;
-    }
-
     public SampleType getSampleType() {
         return sampleType;
     }

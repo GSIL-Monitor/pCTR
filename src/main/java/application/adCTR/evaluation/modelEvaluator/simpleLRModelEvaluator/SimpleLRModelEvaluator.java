@@ -223,9 +223,9 @@ public class SimpleLRModelEvaluator extends AbstractModelEvaluator {
         for(int i = 0, len = features.size(); i < len; i++)
         {
             Feature feature = features.get(i);
-            int idx = feature.getFeatureId();
+            int idx = feature.getFeatureId() - 1;
             double value = NumericalUtils.toDouble(feature.getFeatureValue());
-            if(Double.isNaN(value))
+            if(Double.isNaN(value) || idx < 0)
             {
                 continue;
             }
@@ -237,7 +237,7 @@ public class SimpleLRModelEvaluator extends AbstractModelEvaluator {
 
     private double getWeight(int index)
     {
-        return weightSize > index ? weightList.get(index) : 0;
+        return weightSize >= index ? weightList.get(index) : 0;
     }
 
     private double logisticFunction(double value)
